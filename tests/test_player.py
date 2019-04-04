@@ -6,8 +6,8 @@ from chesslet.player import Player
 class PlayerTest(unittest.TestCase):
     def test_user_login(self):
         # Get username and password
-        uuid = input ("Please enter your username ")
-        password = input("Please enter your password ")
+        uuid = input ("Please enter your username")
+        password = input("Please enter your password")
 
         # Instantiate the required objects
         player = Player(uuid, password)
