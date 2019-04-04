@@ -1,0 +1,19 @@
+{
+  "name": "chesslet",
+  "version": "1.0.0",
+  "description": "A Wonderful SEF Project",
+  "main": "index.js",
+  "repository": "https://github.com/Black-Tomcat/Chesslet.git",
+  "author": "Black-Tomcat <tomcat.frantz@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "electron": "^4.1.3",
+    "react": "^16.8.6"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  }
+}
