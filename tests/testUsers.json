@@ -1,0 +1,26 @@
+{
+  "1234567890abcdef": {
+    "uuid": "1234567890abcdef",
+    "password": "unsafe",
+    "account_name": "Tom",
+    "highscore": 0
+  },
+  "1234567890abcdf0": {
+    "uuid": "1234567890abcdf0",
+    "password": "unsafe",
+    "account_name": "Grace",
+    "highscore": 0
+  },
+  "1234567890abcdf1": {
+    "uuid": "1234567890abcdf1",
+    "password": "unsafe",
+    "account_name": "Jack",
+    "highscore": 0
+  },
+  "1234567890abcdf2": {
+    "uuid": "1234567890abcdf2",
+    "password": "unsafe",
+    "account_name": "Flynn",
+    "highscore": 0
+  }
+}
