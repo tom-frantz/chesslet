@@ -5,8 +5,10 @@ class InvalidPasswordException(Exception):
 class AlreadyLoggedInException(Exception):
     pass
 
+
 class PlayerNotLoggedIn(Exception):
     pass
+
 
 class Player:
     def __init__(

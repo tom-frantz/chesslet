@@ -1,9 +1,8 @@
-import os
 import unittest
 from functools import partial
 
 from chesslet.player import Player, InvalidPasswordException, AlreadyLoggedInException
-from webserver import ServerState, PlayerNotFoundException, PlayerAlreadyExistsException
+from webserver import ServerState, PlayerAlreadyExistsException
 
 
 class TestServer(unittest.TestCase):
