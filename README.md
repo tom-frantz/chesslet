@@ -2,6 +2,8 @@
 ### A Wonderful SEF Project
 
 ## Setting Up The App
+All of these commands should be run from the base folder (The directory this file is in)
+
 ### To install the python requirements
 First, setup a python virtual env
 
