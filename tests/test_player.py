@@ -29,7 +29,7 @@ class PlayerTest(unittest.TestCase):
         self.assertRaises(PlayerNotLoggedIn, player.logout)
 
     def test_user_log_out_success(self):
-        # Testing
+        # Testing the player logout with success
         player = Player("12893829", "password", "Grace")
         player.login("password")
         self.assertTrue(player.logout())
