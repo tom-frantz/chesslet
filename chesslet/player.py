@@ -39,3 +39,10 @@ class Player:
             raise InvalidPasswordException("Invalid Password")
 
         return self.logged_in  # True
+
+    def logout(self):
+        if self.logged_in:
+            self.logged_in = False
+            return True
+        if not self.logged_in:
+            raise PlayerNotLoggedIn
