@@ -23,6 +23,7 @@ class ServerState:
     def __init__(self, user_file_path):
         self.players = {}
         self.games = {}
+        self.user_file_path = user_file_path
 
         with open(user_file_path) as user_file:
             players = json.load(user_file)
@@ -35,7 +36,7 @@ class ServerState:
                 )
 
     def save_users(self):
-        json.dump(self.players, "users.json", indent=4)
+        json.dump(self.players, self.user_file_path, indent=4)
 
     def register_user(self, uuid, password, account_name):
         if uuid in self.players:

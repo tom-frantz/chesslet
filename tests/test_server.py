@@ -2,13 +2,13 @@ import os
 import unittest
 from functools import partial
 
-from chesslet.player import Player, InvalidPassword
+from chesslet.player import Player, InvalidPasswordException, AlreadyLoggedInException
 from webserver import ServerState, PlayerNotFoundException, PlayerAlreadyExistsException
 
 
 class TestServer(unittest.TestCase):
     def setUp(self):
-        self.server_state = ServerState("tests/testUsers.json")
+        self.server_state = ServerState("./tests/testUsers.json")
         self.players = {
             "1234567890abcdef": Player(
                 uuid="1234567890abcdef",
@@ -43,7 +43,7 @@ class TestServer(unittest.TestCase):
         self.server_state.register_user(
             uuid=uuid,
             password=password,
-            account_name=name
+            account_name=name,
         )
 
         new_players = dict(self.players)
@@ -60,26 +60,28 @@ class TestServer(unittest.TestCase):
         password = "unsafe"
         name = "Matt"
 
-        self.assertRaises(PlayerAlreadyExistsException, partial(
-            self.server_state.register_user,
-            uuid=uuid,
-            password=password,
-            account_name=name
-        ))
+        self.assertRaises(
+            PlayerAlreadyExistsException,
+            partial(
+                self.server_state.register_user,
+                uuid=uuid,
+                password=password,
+                account_name=name
+            )
+        )
 
         self.assertEqual(self.players, self.server_state.players)
 
     def test_login_player(self):
         self.server_state.login_player("1234567890abcdef", "unsafe")
 
-        self.assertEqual(
-            self.server_state.players["1234567890abcdef"].logged_in,
-            True
+        self.assertTrue(
+            self.server_state.players["1234567890abcdef"].logged_in
         )
 
     def test_cant_login_player(self):
         self.assertRaises(
-            InvalidPassword,
+            InvalidPasswordException,
             partial(
                 self.server_state.login_player,
                 uuid="1234567890abcdef",
@@ -87,9 +89,25 @@ class TestServer(unittest.TestCase):
             )
         )
 
-        self.assertEqual(
+        self.assertFalse(
             self.server_state.players["1234567890abcdef"].logged_in,
-            False,
+        )
+
+    def test_no_double_login(self):
+        login = partial(
+            self.server_state.login_player,
+            uuid="1234567890abcdef",
+            password="unsafe"
+        )
+
+        login()
+        self.assertRaises(
+            AlreadyLoggedInException,
+            login
+        )
+
+        self.assertTrue(
+            self.server_state.players["1234567890abcdef"].logged_in,
         )
 
 
