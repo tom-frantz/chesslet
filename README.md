@@ -40,3 +40,6 @@ https://trello.com/b/Pwdvc1zz/hey-mayne
 
 #### Google Docs : Core Structures
 https://docs.google.com/document/d/1G85eKuhSzEnAJBUcgc2ED9rLh3lWM0DfO46wqDf5czw/edit#heading=h.6lsteycwwlpo
+
+#### Use Case Diagram
+https://www.lucidchart.com/invitations/accept/baba43c6-4b03-4f08-a93b-460b559f1ccd
