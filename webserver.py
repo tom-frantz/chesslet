@@ -61,5 +61,5 @@ def hello():
 
 
 if __name__ == '__main__':
-    server_state = ServerState()
+    server_state = ServerState("./users.json")
     app.run()

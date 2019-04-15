@@ -1,7 +1,9 @@
 from chesslet.point import Point
 
+
 class InvalidCombinationStateException(Exception):
     pass
+
 
 class Piece:
     move_sets = {
@@ -19,6 +21,15 @@ class Piece:
             "Knight": 0,
             **initial_combinations
         }
+
+    def __str__(self):
+        piece_key = None
+        for key, value in self.combination_state.items():
+            if value > 0:
+                if piece_key is not None:
+                    return "C"
+                piece_key = key[0]
+        return piece_key
 
     def __repr__(self):
         return str(self.combination_state)
