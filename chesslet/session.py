@@ -17,30 +17,37 @@ class PlayerNotAddedException(Exception):
 class Session:
     def __init__(self, uuid):
         self.uuid = uuid
-        self.players = {}
-        self.board = Board(self.uuid)
+        self.player_1 = None
+        self.player_2 = None
+        self.player_1_turn = True
+        self.board = Board()
 
     def add_player(self, player):
         # if expression
-        if player.uuid in self.players:
-            raise PlayerAlreadyAddedException
-
-        if player.logged_in:
-            self.players[player.uuid] = player
-        else:
+        if not player.logged_in:
             raise PlayerNotLoggedIn("Cannot allow a not logged in player into game")
 
+        if self.player_1 is None:
+            if player.uuid == self.player_2.uuid:
+                raise PlayerAlreadyAddedException
+            self.player_1 = player
+            self.board.player_1_uuid = player.uuid
+        else:
+            if player.uuid == self.player_1.uuid:
+                raise PlayerAlreadyAddedException
+            self.player_2 = player
+            self.board.player_2_uuid = player.uuid
+
     def remove_player(self, player):
-        if player.uuid in self.players:
-            del self.players[player.uuid]
+        if player.uuid == self.player_1.uuid:
+            self.player_1 = None
+        elif player.uuid == self.player_2.uuid:
+            self.player_2 = None
         else:
             raise PlayerNotLoggedIn("Cannot remove a player not added to game")
 
     # Simple move piece without being able to split or combine piece
-    def move_piece(self, player, curr_pos_x, curr_pos_y, new_pos_x, new_pos_y):
-        if player.uuid not in self.players:
-            raise PlayerNotAddedException("Player not added cannot move piece")
+    def move_piece(self, curr_pos, new_pos):
+        player = self.player_1 if self.player_1_turn else self.player_2
 
-        curr_pos = Point(curr_pos_x, curr_pos_y)
-        new_pos = Point(new_pos_x, new_pos_y)
         self.board.move_piece(player, curr_pos, new_pos)
