@@ -1,5 +1,7 @@
 from chesslet.player import PlayerNotLoggedIn
 from chesslet.board import Board
+from chesslet.board import InvalidMoveException
+from chesslet.board import InvalidPieceSelectionException
 from chesslet.point import Point
 
 # -Session class has a function called by the server, which takes from pos,
@@ -31,12 +33,10 @@ class Session:
             if self.player_2 is not None and player.uuid == self.player_2.uuid:
                 raise PlayerAlreadyAddedException
             self.player_1 = player
-            self.board.player_1_uuid = player.uuid
         else:
             if self.player_1 is not None and player.uuid == self.player_1.uuid:
                 raise PlayerAlreadyAddedException
             self.player_2 = player
-            self.board.player_2_uuid = player.uuid
 
     def remove_player(self, player):
         if player.uuid == self.player_1.uuid:
@@ -53,7 +53,11 @@ class Session:
         if player.uuid != requesting_player_uuid:
             raise Exception("TODO")
 
-        self.player_1_turn = not self.player_1_turn
-
-        other_piece = self.board.move_piece(player.uuid, curr_pos, new_pos)
-        player.score += 5 if other_piece is not None else 0
+        try:
+            other_piece = self.board.move_piece(self.player_1_turn, curr_pos, new_pos)
+            player.score += 5 if other_piece is not None else 0
+            self.player_1_turn = not self.player_1_turn
+        except InvalidMoveException:
+            pass
+        except InvalidPieceSelectionException:
+            pass

@@ -15,8 +15,6 @@ class BoardTest(unittest.TestCase):
         self.player_1 = Player("abc", "unsafe", "tom")
         self.player_2 = Player("yeet", "unsafe", "jashdjas")
         self.board = Board(True)
-        self.board.player_1_uuid = "abc"
-        self.board.player_2_uuid = "yeet"
 
     def test_move_rook(self):
         piece = Piece({"Rook": 1})

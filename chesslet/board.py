@@ -12,24 +12,21 @@ class InvalidPieceSelectionException(Exception):
 
 class Board:
     board_size = 6
-    piece_types = ("Rook", "Bishop", "Knight") # Will this preserve order?
-    # Do we want to access the board with [x][y] or [y][x]?
+    piece_types = ("Rook", "Bishop", "Knight")
 
     def __init__(self, empty=False):
         # Creates the board matrix and fills it with None
         self.board = []
         for i in range(self.board_size):
             self.board.append([None] * Board.board_size)
-        
-        # Creates the pieces, adds them to the board and the player lists
-        self.player_1_uuid = None
-        self.player_2_uuid = None
+
         self.player_1_pieces = []
         self.player_2_pieces = []
 
         if empty:
             return
 
+        # Creates the pieces, adds them to the board and the player lists
         for position_offset, piece_type in enumerate(self.piece_types):
             # Player 1
             for i in range(2):
@@ -44,7 +41,7 @@ class Board:
                 position = position_offset if i == 0 else self.board_size - 1 - position_offset
                 self.board[position][self.board_size - 1] = new_piece
 
-    def calculate_valid_move_positions(self, piece, pos, player_move_list):
+    def calculate_valid_move_positions(self, piece, pos, player_piece_list):
         move_set = piece.get_move_set()
         valid_move_positions = []
         for move_ray in move_set:
@@ -53,44 +50,51 @@ class Board:
                 new_pos = pos + offset
                 in_board = 0 <= new_pos.x < self.board_size and 0 <= new_pos.y < self.board_size
                 try:
-                    target_pos = self.board[new_pos.x][new_pos.y]
-                    if in_board and (target_pos is None or target_pos not in player_move_list):
+                    target_pos_piece = self.board[new_pos.x][new_pos.y]
+                    if in_board and (target_pos_piece is None or target_pos_piece not in player_piece_list):
                         valid_move_positions.append(new_pos)
-                        if target_pos is not None and target_pos not in player_move_list:
+                        if target_pos_piece is not None and target_pos_piece not in player_piece_list:
                             break
                     else:
                         break
-                except Exception as e:
+                except Exception:
                     pass
 
         return valid_move_positions
 
-    def move_piece(self, player_uuid, curr_pos, new_pos):
+    def move_piece(self, player_1_turn, curr_pos, new_pos):
+        # Curr_pos within board bounds
         if curr_pos.x < 0 or curr_pos.x > self.board_size - 1 or new_pos.y < 0 or new_pos.y > self.board_size - 1:
             raise InvalidMoveException
 
+        # Curr_pos contains a piece
         piece = self.board[curr_pos.x][curr_pos.y]
         if piece is None:
-            raise InvalidMoveException
+            raise InvalidPieceSelectionException
 
-        player_piece_list = self.player_1_pieces if player_uuid == self.player_1_uuid else self.player_2_pieces
+        player_piece_list = self.player_1_pieces if player_1_turn else self.player_2_pieces
 
+        # Piece is within the correct player list
         if piece not in player_piece_list:
             raise InvalidPieceSelectionException
 
+        # New_pos is a valid move
         move_positions = self.calculate_valid_move_positions(piece, curr_pos, player_piece_list)
         if new_pos not in move_positions:
             raise InvalidMoveException
 
         other_piece = self.board[new_pos.x][new_pos.y]
 
+        # Potential piece in new_pos is not from the same team
         if other_piece is not None:
             if other_piece in player_piece_list:
                 raise InvalidMoveException
 
+        # Moves piece to the new position
         self.board[curr_pos.x][curr_pos.y] = None
         self.board[new_pos.x][new_pos.y] = piece
 
+        # Return a piece if it was taken
         return other_piece
 
     def __str__(self):
