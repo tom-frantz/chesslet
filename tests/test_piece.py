@@ -22,7 +22,7 @@ class TestPiece(unittest.TestCase):
         [Point(2, 1)], [Point(2, -1)], [Point(1, -2)], [Point(-1, -2)], [Point(-2, -1)], 
         [Point(-2, 1)], [Point(-1, 2)]]
         piece = Piece({"Rook": 1, "Knight": 1})
-        self.assertEqual(piece.get_move_set(), correct_move_set)
+        self.assertEqual(Piece.get_move_set(piece.combination_state), correct_move_set)
 
 if __name__ == '__main__':
     unittest.main()
