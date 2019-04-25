@@ -12,14 +12,14 @@ class Piece:
         "Knight": [[Point(1, 2)], [Point(2, 1)], [Point(2, -1)], [Point(1, -2)], [Point(-1, -2)], [Point(-2, -1)], [Point(-2, 1)], [Point(-1, 2)]]
     }
 
-    def __init__(self, initial_combinations):
+    def __init__(self, combination_state):
         # Checks to see if values within initial_combination are valid
-        if not initial_combinations.keys() <= Piece.move_sets.keys(): raise InvalidCombinationStateException
+        if not combination_state.keys() <= Piece.move_sets.keys(): raise InvalidCombinationStateException
         self.combination_state = {
             "Rook": 0,
             "Bishop": 0,
             "Knight": 0,
-            **initial_combinations
+            **combination_state
         }
 
     def __str__(self):
@@ -34,24 +34,38 @@ class Piece:
     def __repr__(self):
         return str(self.combination_state)
 
-    def combine_piece(self, piece_combination_state):
-        for piece in piece_combination_state:
-            self.combination_state[piece] += piece_combination_state[piece]
+    def contains_state(self, combination_state):
+        for piece_type in combination_state:
+            if self.combination_state[piece_type] < combination_state[piece_type]:
+                return False
+        return True
 
-    def split_piece(self, piece_combination_state):
+    def is_empty(self):
+        for piece_type in self.combination_state:
+            if self.combination_state[piece_type] > 0:
+                return False
+        return True
+
+    def combine_piece(self, combination_state):
+        for piece_type in combination_state:
+            self.combination_state[piece_type] += combination_state[piece_type]
+
+    def split_piece(self, combination_state):
         # Checks the splitting state is contained within the current
         # state before altering 
-        for piece in piece_combination_state:
-            if self.combination_state[piece] == 0:
+        for piece_type in combination_state:
+            if self.combination_state[piece_type] < combination_state[piece_type]:
                 raise InvalidCombinationStateException
-        for piece in piece_combination_state:
-            self.combination_state[piece] -= piece_combination_state[piece]        
+        for piece_type in combination_state:
+            self.combination_state[piece_type] -= combination_state[piece_type]
+        return Piece(combination_state)    
 
-    def get_move_set(self):
+    @classmethod
+    def get_move_set(cls, combination_state):
         move_set = []
-        for piece in self.combination_state:
-            if self.combination_state[piece] > 0:
-                for move_ray in Piece.move_sets[piece]:
+        for piece_type in combination_state:
+            if combination_state[piece_type] > 0:
+                for move_ray in Piece.move_sets[piece_type]:
                     move_set.append(move_ray)
         return move_set
 

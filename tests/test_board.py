@@ -119,5 +119,19 @@ class BoardTest(unittest.TestCase):
 
         self.assertEqual(self.board.board[5][4], piece)
 
+    def test_split_piece(self):
+        piece = Piece({"Rook": 1, "Bishop": 1})
+        self.board.board[3][0] = piece
+        self.board.player_1_pieces.append(self.board.board[3][0])
+
+        # Splits rook out
+        self.board.move_piece(True, Point(3, 0), Point(3, 2), {"Rook": 1})
+        self.assertEqual(self.board.board[3][2].combination_state, {"Rook": 1, "Bishop": 0, "Knight": 0})
+        self.assertEqual(self.board.board[3][0].combination_state, {"Rook": 0, "Bishop": 1, "Knight": 0})
+
+        # Test invalid rook movement by the bishop
+        part = partial(self.board.move_piece, True, Point(3, 0), Point(3, 1))
+        self.assertRaises(InvalidMoveException, part)
+
 if __name__ == '__main__':
     unittest.main()

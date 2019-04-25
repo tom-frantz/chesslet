@@ -47,14 +47,14 @@ class Session:
             raise PlayerNotLoggedIn("Cannot remove a player not added to game")
 
     # Simple move piece without being able to split or combine piece
-    def move_piece(self, requesting_player_uuid, curr_pos, new_pos):
+    def move_piece(self, requesting_player_uuid, curr_pos, new_pos, combination_state = None):
         player = self.player_1 if self.player_1_turn else self.player_2
 
         if player.uuid != requesting_player_uuid:
             raise Exception("TODO")
 
         try:
-            other_piece = self.board.move_piece(self.player_1_turn, curr_pos, new_pos)
+            other_piece = self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
             player.score += 5 if other_piece is not None else 0
             self.player_1_turn = not self.player_1_turn
         except InvalidMoveException:

@@ -41,8 +41,8 @@ class Board:
                 position = position_offset if i == 0 else self.board_size - 1 - position_offset
                 self.board[position][self.board_size - 1] = new_piece
 
-    def calculate_valid_move_positions(self, piece, pos, player_piece_list):
-        move_set = piece.get_move_set()
+    def calculate_valid_move_positions(self, combination_state, pos, player_piece_list):
+        move_set = Piece.get_move_set(combination_state)
         valid_move_positions = []
         for move_ray in move_set:
             for offset in move_ray:
@@ -55,7 +55,7 @@ class Board:
                 else: break
         return valid_move_positions
 
-    def move_piece(self, player_1_turn, curr_pos, new_pos):
+    def move_piece(self, player_1_turn, curr_pos, new_pos, combination_state = None):
         # Curr_pos within board bounds
         if curr_pos.x < 0 or curr_pos.x > self.board_size - 1 or new_pos.y < 0 or new_pos.y > self.board_size - 1:
             raise InvalidMoveException
@@ -65,6 +65,13 @@ class Board:
         if piece is None:
             raise InvalidPieceSelectionException
 
+        # The combination_state (if supplied) is contained within piece's combintion_state
+        if combination_state is None:
+            combination_state = piece.combination_state.copy()
+        else:
+            if not piece.contains_state(combination_state):
+                raise InvalidPieceSelectionException
+
         player_piece_list = self.player_1_pieces if player_1_turn else self.player_2_pieces
 
         # Piece is within the correct player list
@@ -72,24 +79,54 @@ class Board:
             raise InvalidPieceSelectionException
 
         # New_pos is a valid move
-        if new_pos not in self.calculate_valid_move_positions(piece, curr_pos, player_piece_list):
+        if new_pos not in self.calculate_valid_move_positions(combination_state, curr_pos, player_piece_list):
             raise InvalidMoveException
 
         other_piece = self.board[new_pos.x][new_pos.y]
 
-        # Checks if movement will result in a combination
+        # If the supplied combination_state is not the same as
+        # the piece's, it attempts to split the piece 
+        moved_piece = None
+        if piece.combination_state == combination_state:
+            moved_piece = piece
+            self.board[curr_pos.x][curr_pos.y] = None
+        else:
+            moved_piece = piece.split_piece(combination_state)
+            player_piece_list.append(moved_piece)
+                        
+        if other_piece is None:
+            # Moves piece to the new position
+            self.board[new_pos.x][new_pos.y] = moved_piece
+            return None
+        else:
+            # Checks whether move will result in a combination
+            # or a piece taken
+            if other_piece in player_piece_list:
+                # Combines the piece into the other_piece
+                other_piece.combine_piece(moved_piece.combination_state)
+                player_piece_list.remove(moved_piece)
+                return None
+            else:
+                # Moves piece to the new position
+                self.board[new_pos.x][new_pos.y] = moved_piece
+                (self.player_2_pieces if player_1_turn else self.player_1_pieces).remove(other_piece)
+                return other_piece
+
         if other_piece is not None and other_piece in player_piece_list:
             # Combines the piece into the other_piece
-            other_piece.combine_piece(piece.combination_state)
-            self.board[curr_pos.x][curr_pos.y] = None
+            other_piece.combine_piece(moved_piece.combination_state)
+            player_piece_list.remove(moved_piece)
             return None
         else:
             # Moves piece to the new position
-            self.board[curr_pos.x][curr_pos.y] = None
-            self.board[new_pos.x][new_pos.y] = piece
+            self.board[new_pos.x][new_pos.y] = moved_piece
 
-            # Return a piece if it was taken
-            return other_piece        
+            # Returns the piece that was taken (if one was taken)
+            if other_piece is None:
+                return None
+            else:
+                (self.player_2_pieces if player_1_turn else self.player_1_pieces).remove(other_piece)
+                return other_piece
 
     def __str__(self):
         """
