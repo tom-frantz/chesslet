@@ -46,20 +46,13 @@ class Board:
         valid_move_positions = []
         for move_ray in move_set:
             for offset in move_ray:
-                # All previous positions in the ray must be valid for the current position to be valid
                 new_pos = pos + offset
-                in_board = 0 <= new_pos.x < self.board_size and 0 <= new_pos.y < self.board_size
-                try:
-                    target_pos_piece = self.board[new_pos.x][new_pos.y]
-                    if in_board and (target_pos_piece is None or target_pos_piece not in player_piece_list):
-                        valid_move_positions.append(new_pos)
-                        if target_pos_piece is not None and target_pos_piece not in player_piece_list:
-                            break
-                    else:
-                        break
-                except Exception:
-                    pass
-
+                # If the new_pos is outside the board, the ray ends before appending
+                if 0 <= new_pos.x < self.board_size and 0 <= new_pos.y < self.board_size:
+                    valid_move_positions.append(new_pos)
+                    # If the new_pos contains a piece, the ray ends after appending
+                    if self.board[new_pos.x][new_pos.y] is not None: break
+                else: break
         return valid_move_positions
 
     def move_piece(self, player_1_turn, curr_pos, new_pos):
@@ -79,23 +72,24 @@ class Board:
             raise InvalidPieceSelectionException
 
         # New_pos is a valid move
-        move_positions = self.calculate_valid_move_positions(piece, curr_pos, player_piece_list)
-        if new_pos not in move_positions:
+        if new_pos not in self.calculate_valid_move_positions(piece, curr_pos, player_piece_list):
             raise InvalidMoveException
 
         other_piece = self.board[new_pos.x][new_pos.y]
 
-        # Potential piece in new_pos is not from the same team
-        if other_piece is not None:
-            if other_piece in player_piece_list:
-                raise InvalidMoveException
+        # Checks if movement will result in a combination
+        if other_piece is not None and other_piece in player_piece_list:
+            # Combines the piece into the other_piece
+            other_piece.combine_piece(piece.combination_state)
+            self.board[curr_pos.x][curr_pos.y] = None
+            return None
+        else:
+            # Moves piece to the new position
+            self.board[curr_pos.x][curr_pos.y] = None
+            self.board[new_pos.x][new_pos.y] = piece
 
-        # Moves piece to the new position
-        self.board[curr_pos.x][curr_pos.y] = None
-        self.board[new_pos.x][new_pos.y] = piece
-
-        # Return a piece if it was taken
-        return other_piece
+            # Return a piece if it was taken
+            return other_piece        
 
     def __str__(self):
         """
