@@ -14,8 +14,9 @@ class Board:
     board_size = 6
     piece_types = ("Rook", "Bishop", "Knight")
 
-    def __init__(self, empty=False):
+    def __init__(self, session, empty=False):
         # Creates the board matrix and fills it with None
+        self.session = session
         self.board = []
         for i in range(self.board_size):
             self.board.append([None] * Board.board_size)
@@ -95,9 +96,7 @@ class Board:
             player_piece_list.append(moved_piece)
                         
         if other_piece is None:
-            # Moves piece to the new position
             self.board[new_pos.x][new_pos.y] = moved_piece
-            return None
         else:
             # Checks whether move will result in a combination
             # or a piece taken
@@ -105,28 +104,12 @@ class Board:
                 # Combines the piece into the other_piece
                 other_piece.combine_piece(moved_piece.combination_state)
                 player_piece_list.remove(moved_piece)
-                return None
             else:
-                # Moves piece to the new position
                 self.board[new_pos.x][new_pos.y] = moved_piece
-                (self.player_2_pieces if player_1_turn else self.player_1_pieces).remove(other_piece)
-                return other_piece
 
-        if other_piece is not None and other_piece in player_piece_list:
-            # Combines the piece into the other_piece
-            other_piece.combine_piece(moved_piece.combination_state)
-            player_piece_list.remove(moved_piece)
-            return None
-        else:
-            # Moves piece to the new position
-            self.board[new_pos.x][new_pos.y] = moved_piece
-
-            # Returns the piece that was taken (if one was taken)
-            if other_piece is None:
-                return None
-            else:
+                # Other_piece gets taken
                 (self.player_2_pieces if player_1_turn else self.player_1_pieces).remove(other_piece)
-                return other_piece
+                self.session.piece_taken(other_piece)
 
     def __str__(self):
         """

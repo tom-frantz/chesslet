@@ -22,7 +22,7 @@ class Session:
         self.player_1 = None
         self.player_2 = None
         self.player_1_turn = True
-        self.board = Board()
+        self.board = Board(session=self)
 
     def add_player(self, player):
         # if expression
@@ -54,10 +54,14 @@ class Session:
             raise Exception("TODO")
 
         try:
-            other_piece = self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
-            player.score += 5 if other_piece is not None else 0
+            self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
             self.player_1_turn = not self.player_1_turn
         except InvalidMoveException:
-            pass
+            pass #TODO
         except InvalidPieceSelectionException:
-            pass
+            pass #TODO
+
+    # Allows the board to let the session know that a piece has been taken
+    def piece_taken(self, piece):
+        player = self.player_1 if self.player_1_turn else self.player_2
+        player.score += 5
