@@ -25,7 +25,6 @@ class Session:
         self.board = Board(session=self)
 
     def add_player(self, player):
-        # if expression
         if not player.logged_in:
             raise PlayerNotLoggedIn("Cannot allow a not logged in player into game")
 
@@ -46,7 +45,6 @@ class Session:
         else:
             raise PlayerNotLoggedIn("Cannot remove a player not added to game")
 
-    # Simple move piece without being able to split or combine piece
     def move_piece(self, requesting_player_uuid, curr_pos, new_pos, combination_state = None):
         player = self.player_1 if self.player_1_turn else self.player_2
 

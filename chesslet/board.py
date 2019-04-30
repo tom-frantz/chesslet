@@ -31,30 +31,38 @@ class Board:
         for position_offset, piece_type in enumerate(self.piece_types):
             # Player 1
             for i in range(2):
-                new_piece = Piece({piece_type: 1})
-                self.player_1_pieces.append(new_piece)
-                position = position_offset if i == 0 else self.board_size - 1 - position_offset
-                self.board[position][0] = new_piece
+                position = Point(position_offset if i == 0 else self.board_size - 1 - position_offset, 0)
+                self.add_piece({piece_type}, position, True)
             # Player 2
             for i in range(2):
-                new_piece = Piece({piece_type: 1})
-                self.player_2_pieces.append(new_piece)
-                position = position_offset if i == 0 else self.board_size - 1 - position_offset
-                self.board[position][self.board_size - 1] = new_piece
+                position = Point(position_offset if i == 0 else self.board_size - 1 - position_offset, self.board_size - 1)
+                self.add_piece({piece_type}, position, False)
 
-    def calculate_valid_move_positions(self, combination_state, pos, player_piece_list):
-        move_set = Piece.get_move_set(combination_state)
-        valid_move_positions = []
-        for move_ray in move_set:
-            for offset in move_ray:
-                new_pos = pos + offset
-                # If the new_pos is outside the board, the ray ends before appending
-                if 0 <= new_pos.x < self.board_size and 0 <= new_pos.y < self.board_size:
-                    valid_move_positions.append(new_pos)
-                    # If the new_pos contains a piece, the ray ends after appending
-                    if self.board[new_pos.x][new_pos.y] is not None: break
-                else: break
-        return valid_move_positions
+        self.update_valid_move_positions()
+
+    def add_piece(self, combination_state, position, player_1):
+        new_piece = Piece(combination_state, position)
+        (self.player_1_pieces if player_1 else self.player_2_pieces).append(new_piece)
+        self.board[position.x][position.y] = new_piece
+        return new_piece
+
+    def update_valid_move_positions(self):
+        for piece in (self.player_1_pieces + self.player_2_pieces):
+            # Clears all previous valid positions
+            for piece_type in self.piece_types:
+                piece.valid_move_positions[piece_type].clear()
+            # Generates new valid positions based on updated board
+            # and piece combination state
+            for piece_type in piece.combination_state:
+                for move_ray in piece.move_sets[piece_type]:
+                    for offset in move_ray:
+                        new_pos = piece.position + offset
+                        # If the new_pos is outside the board, the ray ends before appending
+                        if 0 <= new_pos.x < self.board_size and 0 <= new_pos.y < self.board_size:
+                            piece.valid_move_positions[piece_type].append(new_pos)
+                            # If the new_pos contains a piece, the ray ends after appending
+                            if self.board[new_pos.x][new_pos.y] is not None: break
+                        else: break
 
     def move_piece(self, player_1_turn, curr_pos, new_pos, combination_state = None):
         # Curr_pos within board bounds
@@ -66,11 +74,11 @@ class Board:
         if piece is None:
             raise InvalidPieceSelectionException
 
-        # The combination_state (if supplied) is contained within piece's combintion_state
+        # The combination_state (if supplied) is contained within piece's combination_state
         if combination_state is None:
             combination_state = piece.combination_state.copy()
         else:
-            if not piece.contains_state(combination_state):
+            if not piece.combination_state >= combination_state:
                 raise InvalidPieceSelectionException
 
         player_piece_list = self.player_1_pieces if player_1_turn else self.player_2_pieces
@@ -80,7 +88,12 @@ class Board:
             raise InvalidPieceSelectionException
 
         # New_pos is a valid move
-        if new_pos not in self.calculate_valid_move_positions(combination_state, curr_pos, player_piece_list):
+        found = False
+        for piece_type in combination_state:
+            if new_pos in piece.valid_move_positions[piece_type]:
+                found = True
+                break
+        if not found:
             raise InvalidMoveException
 
         other_piece = self.board[new_pos.x][new_pos.y]
@@ -90,9 +103,10 @@ class Board:
         moved_piece = None
         if piece.combination_state == combination_state:
             moved_piece = piece
+            moved_piece.position = new_pos
             self.board[curr_pos.x][curr_pos.y] = None
         else:
-            moved_piece = piece.split_piece(combination_state)
+            moved_piece = piece.split_piece(combination_state, new_pos)
             player_piece_list.append(moved_piece)
                         
         if other_piece is None:
@@ -110,6 +124,11 @@ class Board:
                 # Other_piece gets taken
                 (self.player_2_pieces if player_1_turn else self.player_1_pieces).remove(other_piece)
                 self.session.piece_taken(other_piece)
+        
+        self.update_valid_move_positions()
+
+    def get_board_state(self):
+        pass
 
     def __str__(self):
         """
