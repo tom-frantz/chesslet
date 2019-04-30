@@ -128,7 +128,18 @@ class Board:
         self.update_valid_move_positions()
 
     def get_board_state(self):
-        pass
+        board_state = {"Player_1": [], "Player_2": []}
+        for piece in self.player_1_pieces:
+            board_state["Player_1"].append({"Position": piece.position, 
+            "Combination_state": piece.combination_state,
+            "Valid_move_positions": piece.valid_move_positions})
+
+        for piece in self.player_2_pieces:
+            board_state["Player_2"].append({"Position": piece.position, 
+            "Combination_state": piece.combination_state,
+            "Valid_move_positions": piece.valid_move_positions})
+
+        return board_state
 
     def __str__(self):
         """
