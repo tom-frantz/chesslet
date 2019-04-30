@@ -7,22 +7,41 @@ from chesslet.piece import InvalidCombinationStateException
 
 class TestPiece(unittest.TestCase):
     def test_create_piece(self):
-        # Ensures a piece can be successfully created
-        piece = Piece({"Bishop": 1})
-        self.assertEqual(piece.combination_state, {"Rook": 0, "Bishop": 1, "Knight": 0})
+        # Tests standard piece creation
+        piece = Piece({"Bishop"}, Point(0, 0))
+        self.assertEqual(piece.combination_state, {"Bishop"})
 
-        # Ensures that an invalid combination state will not be processed
-        part = partial(Piece, {"Queen": 1})
+        # Tests an invalid combination state
+        part = partial(Piece, {"Queen"}, Point(0, 0))
         self.assertRaises(InvalidCombinationStateException, part)
 
-    def test_get_move_set(self):
-        # Ensures that the move_set is correctly calculated
-        correct_move_set = [[Point(0, 1), Point(0, 2)], [Point(1, 0), Point(2, 0)], 
-        [Point(0, -1), Point(0, -2)], [Point(-1, 0), Point(-2, 0)], [Point(1, 2)], 
-        [Point(2, 1)], [Point(2, -1)], [Point(1, -2)], [Point(-1, -2)], [Point(-2, -1)], 
-        [Point(-2, 1)], [Point(-1, 2)]]
-        piece = Piece({"Rook": 1, "Knight": 1})
-        self.assertEqual(Piece.get_move_set(piece.combination_state), correct_move_set)
+    def test_combine_piece(self):
+        piece = Piece({"Bishop"}, Point(0, 0))
+
+        # Tests an invalid combination state
+        part = partial(piece.combine_piece, {"Queen"})
+        self.assertRaises(InvalidCombinationStateException, part)
+
+        # Tests an attempt to combine a combination state with a
+        # piece that already contains that state
+        part = partial(piece.combine_piece, {"Bishop", "Knight"})
+        self.assertRaises(InvalidCombinationStateException, part)
+
+        # Tests valid piece combination
+        piece.combine_piece({"Knight"})
+        self.assertEqual(piece.combination_state, {"Bishop", "Knight"})
+
+    def test_split_piece(self):
+        piece = Piece({"Bishop", "Knight"}, Point(0, 0))
+
+        # Tests an invalid combination state
+        part = partial(piece.split_piece, {"Rook"}, Point(1, 1))
+        self.assertRaises(InvalidCombinationStateException, part)
+
+        # Tests valid piece split
+        other_piece = piece.split_piece({"Bishop"}, Point(1, 1))
+        self.assertEqual(piece.combination_state, {"Knight"})
+        self.assertEqual(other_piece.combination_state, {"Bishop"})
 
 if __name__ == '__main__':
     unittest.main()
