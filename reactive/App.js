@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
 function Square(props) {
@@ -17,20 +16,23 @@ class ChessPiece extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
+
+        // TODO
         this.state = {
             piece: this.props.piece
         };
-        if(this.state.piece == 'rook'){
+
+        if(this.state.piece === 'rook'){
             this.state = {
                 icon: 'fas fa-chess-rook',
                 moveset: null,
             };
-        }else if (this.state.piece == 'bishop') {
+        }else if (this.state.piece === 'bishop') {
             this.state = {
                 icon: 'fas fa-chess-bishop',
                 moveset: null,
             };
-        }else if (this.state.piece == 'knight') {
+        }else if (this.state.piece === 'knight') {
             this.state = {
                 icon: 'fas fa-chess-knight',
                 moveset: null,
