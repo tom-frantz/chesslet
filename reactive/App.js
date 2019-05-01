@@ -47,7 +47,7 @@ class ChessPiece extends React.Component {
         }
 
         return(
-            <i style={{color : color}} class={this.state.icon} ></i>
+            <i style={{color : color}} className={this.state.icon} ></i>
         )
     }
 }
@@ -76,9 +76,9 @@ class Board extends React.Component {
     }
 
   renderSquare(i) {
-      return <Square
-             value={this.state.squares[i]}
-             onClick={() => this.handleClick(i)}
+        return <Square
+            value={this.state.squares[i]}
+            onClick={() => this.handleClick(i)}
            />
   };
 
