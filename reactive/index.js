@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {Board} from "./App.js";
+import {Board} from "./Board.js";
 import API from "./api.js";
 
 class App extends React.Component {
