@@ -13,28 +13,65 @@ function Square(props) {
   );
 }
 
-class Board extends React.Component {
-  constructor(props) {
-    super(props);
-    let squares = this.startingPieces();
-    this.state = {
-      size: 6,
-      squares: squares,
-      whiteIsNext: true,
-    };
-  }
-
-  handleClick(i){
-    const squares = this.state.squares.slice();
-    if(squares[i]){
-        return;
+class ChessPiece extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log(props);
+        this.state = {
+            piece: this.props.piece
+        };
+        if(this.state.piece == 'rook'){
+            this.state = {
+                icon: 'fas fa-chess-rook',
+                moveset: null,
+            };
+        }else if (this.state.piece == 'bishop') {
+            this.state = {
+                icon: 'fas fa-chess-bishop',
+                moveset: null,
+            };
+        }else if (this.state.piece == 'knight') {
+            this.state = {
+                icon: 'fas fa-chess-knight',
+                moveset: null,
+            };
+        }
     }
-    squares[i] = this.state.whiteIsNext ? 'White' : 'Black';
-    this.setState({
-      squares: squares,
-      whiteIsNext: !this.state.whiteIsNext,
-    });
-  }
+
+    render(){
+        let color = "#aaaaaa";
+        if (this.props.color === 'black') {
+            color = '#000000';
+        }
+
+        return(
+            <i style={{color : color}} class={this.state.icon} ></i>
+        )
+    }
+}
+
+class Board extends React.Component {
+    constructor(props) {
+        super(props);
+        let squares = this.startingPieces();
+        this.state = {
+            size: 6,
+            squares: squares,
+            whiteIsNext: true,
+        };
+    }
+
+    handleClick(i){
+        const squares = this.state.squares.slice();
+        if(squares[i]){
+            return;
+        }
+        squares[i] = this.state.whiteIsNext ? 'White' : 'Black';
+        this.setState({
+            squares: squares,
+            whiteIsNext: !this.state.whiteIsNext,
+        });
+    }
 
   renderSquare(i) {
       return <Square
@@ -68,18 +105,18 @@ class Board extends React.Component {
 
   startingPieces(){
       let squares = Array(36).fill(null);
-      squares[0] = "Black\n Rook"
-      squares[1] = "Black\n Bishop"
-      squares[2] = "Black\n Knight"
-      squares[3] = "Black\n Knight"
-      squares[4] = "Black\n Bishop"
-      squares[5] = "Black\n Rook"
-      squares[30] = "White\n Rook"
-      squares[31] = "White\n Bishop"
-      squares[32] = "White\n Knight"
-      squares[33] = "White\n Knight"
-      squares[34] = "White\n Bishop"
-      squares[35] = "White\n Rook"
+      squares[0] = <ChessPiece color={'black'} piece={'rook'} />
+      squares[1] = <ChessPiece color={'black'} piece={'bishop'} />
+      squares[2] = <ChessPiece color={'black'} piece={'knight'} />
+      squares[3] = <ChessPiece color={'black'} piece={'knight'} />
+      squares[4] = <ChessPiece color={'black'} piece={'bishop'} />
+      squares[5] = <ChessPiece color={'black'} piece={'rook'} />
+      squares[30] = <ChessPiece color={'white'} piece={'rook'} />
+      squares[31] = <ChessPiece color={'white'} piece={'bishop'} />
+      squares[32] = <ChessPiece color={'white'} piece={'knight'} />
+      squares[33] = <ChessPiece color={'white'} piece={'knight'} />
+      squares[34] = <ChessPiece color={'white'} piece={'bishop'} />
+      squares[35] = <ChessPiece color={'white'} piece={'rook'} />
       return squares;
   }
 
