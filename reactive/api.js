@@ -12,9 +12,3 @@ class API {
 }
 
 export default new API()
-
-// Different File
-
-new API().movePiece()
-    .then((data) => this.setState(data))
-    .catch((err) => this.handleError(err));
