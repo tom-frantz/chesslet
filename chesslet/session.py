@@ -69,8 +69,9 @@ class Session:
         player.score += 5
 
     def get_game_state(self):
-        # returns a list of players and their updated piece states.
+        # returns a list of players, their updated piece states and their scores
         game_state = self.board.get_board_state()
+
         game_state["player_1_score"] = self.player_1.score
         game_state["player_2_score"] = self.player_2.score
 
