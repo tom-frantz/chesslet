@@ -34,8 +34,6 @@ class Player:
         return str(self.__dict__)
 
     def login(self, password):
-        if self.logged_in:
-            raise AlreadyLoggedInException("Already Logged In")
         self.logged_in = self.password == password
         if not self.logged_in:
             raise InvalidPasswordException("Invalid Password")

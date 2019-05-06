@@ -30,12 +30,14 @@ class Session:
 
         if self.player_1 is None:
             if self.player_2 is not None and player.uuid == self.player_2.uuid:
-                raise PlayerAlreadyAddedException
+                raise PlayerAlreadyAddedException("Player already added")
             self.player_1 = player
         else:
             if self.player_1 is not None and player.uuid == self.player_1.uuid:
-                raise PlayerAlreadyAddedException
+                raise PlayerAlreadyAddedException("Player already added")
             self.player_2 = player
+
+        # TODO some sort of start game message here for the server.
 
     def remove_player(self, player):
         if player.uuid == self.player_1.uuid:
@@ -69,9 +71,7 @@ class Session:
     def get_game_state(self):
         # returns a list of players and their updated piece states.
         game_state = self.board.get_board_state()
-        game_state["Player 1 Score"] = self.player_1.Score
-        game_state["Player 2 Score"] = self.player_2.Score
-
-        print(game_state)
+        game_state["player_1_score"] = self.player_1.score
+        game_state["player_2_score"] = self.player_2.score
 
         return game_state
