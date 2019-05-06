@@ -20,7 +20,7 @@ class SessionTest(unittest.TestCase):
         session.add_player(player)
 
         # Check to see if session.players is equivalent to an array with the player in it
-        self.assertEqual(session.players, {"a": player})
+        self.assertEqual(session.player_1, player)
 
     def test_no_double_players(self):
         # Instantiate the required objects
@@ -43,7 +43,7 @@ class SessionTest(unittest.TestCase):
         )
 
         # Check to see if session.players is equivalent to an array with the player in it
-        self.assertEqual(session.players, {"a": player})
+        self.assertEqual(session.player_1, player)
 
     def test_remove_player(self):
         session = Session("1234")
@@ -57,7 +57,7 @@ class SessionTest(unittest.TestCase):
 
         session.remove_player(player)
 
-        self.assertEqual(session.players, {})
+        self.assertEqual(session.player_1, None)
 
     def test_remove_player_fail(self):
         session = Session("1234")
@@ -66,9 +66,10 @@ class SessionTest(unittest.TestCase):
             password="b",
             account_name="c"
         )
-        player.logged_in = True
+        player.logged_in = False
 
-        self.assertRaises(PlayerNotLoggedIn, session.remove_player, player)
+
+        self.assertRaises(PlayerNotLoggedIn, session.add_player, player)
 
 
 
