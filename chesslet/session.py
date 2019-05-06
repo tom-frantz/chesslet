@@ -65,3 +65,13 @@ class Session:
     def piece_taken(self, piece):
         player = self.player_1 if self.player_1_turn else self.player_2
         player.score += 5
+
+    def get_game_state(self):
+        # returns a list of players and their updated piece states.
+        game_state = self.board.get_board_state()
+        game_state["Player 1 Score"] = self.player_1.Score
+        game_state["Player 2 Score"] = self.player_2.Score
+
+        print(game_state)
+
+        return game_state
