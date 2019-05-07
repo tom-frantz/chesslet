@@ -7,14 +7,14 @@ All of these commands should be run from the base folder (The directory this fil
 ### To install the python requirements
 First, setup a python virtual env
 
-`pip install virtualenv`
+`pip3 install virtualenv`
 
 `virtualenv venv`
 
 What this will do is create a virtual environment for the project. This will allow you to install python packages here that will not effect other projects.
 Once you've completed that, the next step is to install the requirements to the project. To do so, run the command
 
-`pip install -r requirements.txt`
+`pip3 install -r requirements.txt`
 
 ### To install the javascript requirements
 This section requires Yarn. Download and install this on your machine.
@@ -23,7 +23,7 @@ To install the requirements of the project, simply run this command from the pro
 
 `yarn`
 
-### To start the project 
+### To start the project
 Running scripts from the package.json is just as simple.
 
 `yarn start` will start the project.

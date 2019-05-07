@@ -6,26 +6,20 @@ export class ChessPiece extends React.Component {
         super(props);
         console.log(props);
 
-        // TODO
-        this.state = {
-            piece: this.props.piece
-        };
-
-        if (this.state.piece === 'rook') {
-            this.state = {
-                icon: 'fas fa-chess-rook',
-                moveset: null,
-            };
-        } else if (this.state.piece === 'bishop') {
-            this.state = {
-                icon: 'fas fa-chess-bishop',
-                moveset: null,
-            };
-        } else if (this.state.piece === 'knight') {
-            this.state = {
-                icon: 'fas fa-chess-knight',
-                moveset: null,
-            };
+        if (this.props.piece.length == 1){
+            if (this.props.piece[0] === 'Rook') {
+                this.state = {
+                    icon: 'fas fa-chess-rook',
+                };
+            } else if (this.props.piece[0] === 'Bishop') {
+                this.state = {
+                    icon: 'fas fa-chess-bishop',
+                };
+            } else if (this.props.piece[0] === 'Knight') {
+                this.state = {
+                    icon: 'fas fa-chess-knight',
+                };
+            }
         }
     }
 

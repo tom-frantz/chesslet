@@ -1,0 +1,348 @@
+{
+  "player_1": [
+    {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "combination_state": [
+        "Rook"
+      ],
+      "valid_move_positions": {
+        "Rook": [
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 2
+          },
+          {
+            "x": 1,
+            "y": 0
+          }
+        ],
+        "Bishop": [],
+        "Knight": []
+      }
+    },
+    {
+      "position": {
+        "x": 5,
+        "y": 0
+      },
+      "combination_state": [
+        "Rook"
+      ],
+      "valid_move_positions": {
+        "Rook": [
+          {
+            "x": 5,
+            "y": 1
+          },
+          {
+            "x": 5,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 0
+          }
+        ],
+        "Bishop": [],
+        "Knight": []
+      }
+    },
+    {
+      "position": {
+        "x": 1,
+        "y": 0
+      },
+      "combination_state": [
+        "Bishop"
+      ],
+      "valid_move_positions": {
+        "Rook": [],
+        "Bishop": [
+          {
+            "x": 2,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 0,
+            "y": 1
+          }
+        ],
+        "Knight": []
+      }
+    },
+    {
+      "position": {
+        "x": 4,
+        "y": 0
+      },
+      "combination_state": [
+        "Bishop"
+      ],
+      "valid_move_positions": {
+        "Rook": [],
+        "Bishop": [
+          {
+            "x": 5,
+            "y": 1
+          },
+          {
+            "x": 3,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 2
+          }
+        ],
+        "Knight": []
+      }
+    },
+    {
+      "position": {
+        "x": 2,
+        "y": 0
+      },
+      "combination_state": [
+        "Knight"
+      ],
+      "valid_move_positions": {
+        "Rook": [],
+        "Bishop": [],
+        "Knight": [
+          {
+            "x": 3,
+            "y": 2
+          },
+          {
+            "x": 4,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 2
+          }
+        ]
+      }
+    },
+    {
+      "position": {
+        "x": 3,
+        "y": 0
+      },
+      "combination_state": [
+        "Knight"
+      ],
+      "valid_move_positions": {
+        "Rook": [],
+        "Bishop": [],
+        "Knight": [
+          {
+            "x": 4,
+            "y": 2
+          },
+          {
+            "x": 5,
+            "y": 1
+          },
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 2,
+            "y": 2
+          }
+        ]
+      }
+    }
+  ],
+  "player_2": [
+    {
+      "position": {
+        "x": 0,
+        "y": 5
+      },
+      "combination_state": [
+        "Rook"
+      ],
+      "valid_move_positions": {
+        "Rook": [
+          {
+            "x": 1,
+            "y": 5
+          },
+          {
+            "x": 0,
+            "y": 4
+          },
+          {
+            "x": 0,
+            "y": 3
+          }
+        ],
+        "Bishop": [],
+        "Knight": []
+      }
+    },
+    {
+      "position": {
+        "x": 5,
+        "y": 5
+      },
+      "combination_state": [
+        "Rook"
+      ],
+      "valid_move_positions": {
+        "Rook": [
+          {
+            "x": 5,
+            "y": 4
+          },
+          {
+            "x": 5,
+            "y": 3
+          },
+          {
+            "x": 4,
+            "y": 5
+          }
+        ],
+        "Bishop": [],
+        "Knight": []
+      }
+    },
+    {
+      "position": {
+        "x": 1,
+        "y": 5
+      },
+      "combination_state": [
+        "Bishop"
+      ],
+      "valid_move_positions": {
+        "Rook": [],
+        "Bishop": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 3,
+            "y": 3
+          },
+          {
+            "x": 0,
+            "y": 4
+          }
+        ],
+        "Knight": []
+      }
+    },
+    {
+      "position": {
+        "x": 4,
+        "y": 5
+      },
+      "combination_state": [
+        "Bishop"
+      ],
+      "valid_move_positions": {
+        "Rook": [],
+        "Bishop": [
+          {
+            "x": 5,
+            "y": 4
+          },
+          {
+            "x": 3,
+            "y": 4
+          },
+          {
+            "x": 2,
+            "y": 3
+          }
+        ],
+        "Knight": []
+      }
+    },
+    {
+      "position": {
+        "x": 2,
+        "y": 5
+      },
+      "combination_state": [
+        "Knight"
+      ],
+      "valid_move_positions": {
+        "Rook": [],
+        "Bishop": [],
+        "Knight": [
+          {
+            "x": 4,
+            "y": 4
+          },
+          {
+            "x": 3,
+            "y": 3
+          },
+          {
+            "x": 1,
+            "y": 3
+          },
+          {
+            "x": 0,
+            "y": 4
+          }
+        ]
+      }
+    },
+    {
+      "position": {
+        "x": 3,
+        "y": 5
+      },
+      "combination_state": [
+        "Knight"
+      ],
+      "valid_move_positions": {
+        "Rook": [],
+        "Bishop": [],
+        "Knight": [
+          {
+            "x": 5,
+            "y": 4
+          },
+          {
+            "x": 4,
+            "y": 3
+          },
+          {
+            "x": 2,
+            "y": 3
+          },
+          {
+            "x": 1,
+            "y": 4
+          }
+        ]
+      }
+    }
+  ],
+  "player_1_score": 0,
+  "player_2_score": 0
+}

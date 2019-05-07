@@ -16,7 +16,7 @@ function Square(props) {
 export class Board extends React.Component {
     constructor(props) {
         super(props);
-        let squares = this.startingPieces();
+        let squares = this.placePieces();
         this.state = {
             size: 6,
             squares: squares,
@@ -59,7 +59,7 @@ export class Board extends React.Component {
     }
 
     resetBoard() {
-        let squares = this.startingPieces();
+        let squares = this.placePieces();
         this.setState({
             size: 6,
             squares: squares,
@@ -67,20 +67,26 @@ export class Board extends React.Component {
         });
     }
 
-    startingPieces() {
+    placePieces() {
         let squares = Array(36).fill(null);
-        squares[0] = <ChessPiece color={'black'} piece={'rook'}/>;
-        squares[1] = <ChessPiece color={'black'} piece={'bishop'}/>;
-        squares[2] = <ChessPiece color={'black'} piece={'knight'}/>;
-        squares[3] = <ChessPiece color={'black'} piece={'knight'}/>;
-        squares[4] = <ChessPiece color={'black'} piece={'bishop'}/>;
-        squares[5] = <ChessPiece color={'black'} piece={'rook'}/>;
-        squares[30] = <ChessPiece color={'white'} piece={'rook'}/>;
-        squares[31] = <ChessPiece color={'white'} piece={'bishop'}/>;
-        squares[32] = <ChessPiece color={'white'} piece={'knight'}/>;
-        squares[33] = <ChessPiece color={'white'} piece={'knight'}/>;
-        squares[34] = <ChessPiece color={'white'} piece={'bishop'}/>;
-        squares[35] = <ChessPiece color={'white'} piece={'rook'}/>;
+        let pieces = this.props.boardState.player_1;
+        for(let i = 0; i < pieces.length; i++){
+            let position = pieces[i].position.x + (pieces[i].position.y * 6);
+            squares[position] = <ChessPiece
+                color={'black'}
+                piece={pieces[i].combination_state}
+                moveset={pieces[i].valid_move_positions}
+            />;
+        }
+        pieces = this.props.boardState.player_2;
+        for(let i = 0; i < pieces.length; i++){
+            let position = pieces[i].position.x + (pieces[i].position.y * 6);
+            squares[position] = <ChessPiece
+                color={'white'}
+                piece={pieces[i].combination_state}
+                moveset={pieces[i].valid_move_positions}
+            />;
+        }
         return squares;
     }
 
