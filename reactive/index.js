@@ -40,7 +40,8 @@ class App extends React.Component {
 
     render() {
         let body;
-        if(API.token != null){
+        // change this "if" to == for board, change to != for login
+        if(API.token == null){
             body =
             <div className="game">
                 <div className="game-board">
@@ -85,7 +86,6 @@ class App extends React.Component {
                             </button>
                         </form>
 
-                        // Delete this span once its demands have been sated
                         <span className="or-text">
                             Contents below should be on seperate page
                         </span>
@@ -137,8 +137,17 @@ class App extends React.Component {
             <div>
                 <div className="container-fluid header-top">
                     <div className="row align-items-center justify-content-between">
-                        <div className="col project-title">
-                            SEF Chesslet
+                        <div className="col">
+                            <div className="row">
+                                <div className="col project-title">
+                                    SEF Chesslet
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col">
+                                    A Hey Mayne project
+                                </div>
+                            </div>
                         </div>
                         <div className="col-2 position-relative">
                             <div className="position-absolute vert-line"></div>
