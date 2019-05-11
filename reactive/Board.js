@@ -92,6 +92,10 @@ export class Board extends React.Component {
 
     render() {
         let status = 'Next player: ' + (this.state.whiteIsNext ? 'White' : 'Black');
+        let squares = this.placePieces();
+        this.setState({
+            squares: squares,
+        })
 
         return (
             <div>
