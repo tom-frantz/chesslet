@@ -46,14 +46,20 @@ export class Board extends React.Component {
 
     renderGrid(size) {
         const table = [];
+        let squares = this.placePieces();
         let squareNo = 0;
         for (let i = 0; i < size; i++) {
-            let square = [];
+            let squareArr = [];
             for (let j = 0; j < size; j++) {
-                square.push(this.renderSquare(squareNo));
+                let square = <Square
+                    value={squares[squareNo]}
+                    onClick={() => this.handleClick(i)}
+                    key={squareNo}
+                />;
+                squareArr.push(square);
                 squareNo++;
             }
-            table.push(<div className="board-row" key={i}>{square}</div>)
+            table.push(<div className="board-row" key={i}>{squareArr}</div>)
         }
         return table;
     }
@@ -92,10 +98,6 @@ export class Board extends React.Component {
 
     render() {
         let status = 'Next player: ' + (this.state.whiteIsNext ? 'White' : 'Black');
-        let squares = this.placePieces();
-        this.setState({
-            squares: squares,
-        })
 
         return (
             <div>
