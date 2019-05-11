@@ -1,10 +1,11 @@
-import os
 import random
 
 from flask import Flask
+import flask.json
 from flask_socketio import SocketIO, send, emit, join_room
 import json
 
+from chesslet.board import Board
 from chesslet.player import Player, AlreadyLoggedInException, InvalidPasswordException, PlayerNotLoggedIn
 from chesslet.point import Point
 from chesslet.session import Session, PlayerAlreadyAddedException
@@ -25,7 +26,8 @@ def response_decorator(func):
     def wrapper(*args, **kwargs):
         try:
             res = {"success": True}
-            res.update(func(*args, **kwargs))
+            func_return = func(*args, **kwargs)
+            res.update({} if func_return is None else func_return)
             return res
         # TODO FIND ALL EXCEPTIONS IN HERE
         except (
@@ -101,7 +103,27 @@ class ServerState:
 
 
 server_state = ServerState("./users.json")
-socketio = SocketIO(app)
+
+
+def default_func(obj):
+    if type(obj) is set:
+        obj = list(obj)
+    elif type(obj) is Point:
+        obj = {"x": obj.x, "y": obj.y}
+    return obj
+
+
+class newJson:
+    @staticmethod
+    def dumps(obj, **kwargs):
+        return flask.json.dumps(obj, **kwargs, default=default_func)
+
+    @staticmethod
+    def loads(string, **kwargs):
+        return flask.json.loads(string, **kwargs)
+
+
+socketio = SocketIO(app, json=newJson)
 
 
 @socketio.on("login")
@@ -109,7 +131,8 @@ socketio = SocketIO(app)
 def login(data):
     success, uuid = server_state.login_player(data['username'], data['password'])
     return {
-        "token": uuid
+        "token": uuid,
+        "b": Board(Session("")).get_board_state()
     }
 
 
@@ -141,7 +164,7 @@ def join_game(data):
 
     join_room(game_uuid)
 
-    emit("game start", server_state.games[game_uuid].get_game_state(), room=game_uuid)
+    emit("game start", {"b": server_state.games[game_uuid].get_game_state()}, json=True, room=game_uuid)
     # TODO
     return
 
@@ -166,7 +189,8 @@ def move_piece(data):
         data["combination_state"]
     )
 
-    return server_state.games[data["game_uuid"]].get_board_state()
+    # emit("move_piece", {"b": server_state.games[data["game_uuid"]].get_board_state()}, room=data["game_uuid"])
+    return
 
 
 if __name__ == '__main__':

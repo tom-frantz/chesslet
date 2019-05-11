@@ -77,12 +77,8 @@ class API {
     };
 }
 
-
-let defaultAPI = new API("http://127.0.0.1:5000/", (res) => {}, (res) => {});
-
-
 export function configureAPI(connection, gameStartCallback, movePieceCallback) {
-    defaultAPI = new API(connection, gameStartCallback, movePieceCallback)
+    return new API(connection, gameStartCallback, movePieceCallback)
 }
 
-export default defaultAPI;
+export default configureAPI;

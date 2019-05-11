@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Board } from "./Board.js";
-import API from "./api.js";
+import {Board} from "./Board.js";
+import API, {configureAPI} from "./api.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-var data = require('./dummy.json') //dummy data, delete later
+// let data = require('./dummy.json'); //dummy data, delete later
 
 class App extends React.Component {
     constructor(props) {
@@ -13,12 +13,23 @@ class App extends React.Component {
         this.state = {
             username: "",
             password: "",
-            gameUUID: ""
+            loggedIn: false,
+            gameUUID: "",
+            gameData: {
+                player_1: [],
+                player_2: []
+            },
+            API: configureAPI(
+                "http://127.0.0.1:5000/",
+                (res) => {
+                    console.log("YHEET?");
+                    this.setState({gameData: res.b})},
+                (res) => {this.setState({gameData: res.b})}
+            )
         }
     }
 
-    componentDidMount() {
-    }
+    componentDidMount() {}
 
     onUsernameChange = (event) => {
         this.setState({
@@ -39,57 +50,21 @@ class App extends React.Component {
     };
 
     render() {
+        const API = this.state.API;
+
+        console.log(this.state.gameData);
+
         let body;
         // change this "if" to == for board, change to != for login
-        if(API.token == null){
+        if (this.state.loggedIn) {
             body =
-            <div className="game">
-                <div className="game-board">
-                    <Board
-                        boardState={data}
-                    />
-                </div>
-            </div>;
-        }else{
-            body =
-            <div className="game-info row justify-content-center">
-                <div className="col-6">
-                    <div>
-                        <form onSubmit={(e) => {
-                            e.preventDefault();
-                            API.login(
-                                this.state.username,
-                                this.state.password,
-                                (res) => {
-                                    console.log(res)
-                                }
-                            )
-                        }}>
-                            <span className="input-header">Username</span>
-                            <input
-                                className="form-input"
-                                value={this.state.username}
-                                onChange={this.onUsernameChange}
-                            />
-                            <span className="input-header">Password</span>
-                            <input
-                                className="form-input"
-                                type='password'
-                                value={this.state.password}
-                                onChange={this.onPasswordChange}
-                            />
-                            <button
-                                type="submit"
-                                className="form-input form-button"
-                            >
-                                Login
-                            </button>
-                        </form>
-
-                        <span className="or-text">
-                            Contents below should be on seperate page
-                        </span>
-
+                <div className="game">
+                    <div className="game-board">
+                        <Board
+                            boardState={this.state.gameData}
+                        />
+                    </div>
+                    <div style={{marginLeft: "20px"}}>
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             API.join_game(this.state.gameUUID, (res) => {
@@ -128,10 +103,51 @@ class App extends React.Component {
                             </button>
                         </form>
                     </div>
-                    <div>{/* status */}</div>
-                    <ol>{/* TODO */}</ol>
-                </div>
-            </div>;
+                </div>;
+        } else {
+            body =
+                <div className="game-info row justify-content-center">
+                    <div className="col-6">
+                        <div>
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                API.login(
+                                    this.state.username,
+                                    this.state.password,
+                                    (res) => {
+                                        this.setState({loggedIn: res.success})
+                                    }
+                                )
+                            }}>
+                                <span className="input-header">Username</span>
+                                <input
+                                    className="form-input"
+                                    value={this.state.username}
+                                    onChange={this.onUsernameChange}
+                                />
+                                <span className="input-header">Password</span>
+                                <input
+                                    className="form-input"
+                                    type='password'
+                                    value={this.state.password}
+                                    onChange={this.onPasswordChange}
+                                />
+                                <button
+                                    type="submit"
+                                    className="form-input form-button"
+                                >
+                                    Login
+                                </button>
+                            </form>
+
+                            <span className="or-text">
+                            Contents below should be on seperate page
+                        </span>
+                        </div>
+                        <div>{/* status */}</div>
+                        <ol>{/* TODO */}</ol>
+                    </div>
+                </div>;
         }
         return (
             <div>
@@ -150,7 +166,7 @@ class App extends React.Component {
                             </div>
                         </div>
                         <div className="col-2 position-relative">
-                            <div className="position-absolute vert-line"></div>
+                            <div className="position-absolute vert-line"/>
                             <div className="row">
                                 Tom Frantz
                             </div>
