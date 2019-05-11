@@ -49,3 +49,6 @@ https://www.lucidchart.com/invitations/accept/baba43c6-4b03-4f08-a93b-460b559f1c
 https://www.lucidchart.com/invitations/accept/583400a4-40ec-4d8f-b4c3-3adf926b1079
 ###### Front-End
 https://www.lucidchart.com/invitations/accept/30c3f5d6-3342-4e3e-a8ed-50e6a05fac4f
+
+#### move_piece sequence diagram
+https://www.lucidchart.com/invitations/accept/f208ebdb-788f-497f-8750-5ec8ffa15272
