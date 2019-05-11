@@ -44,5 +44,8 @@ https://docs.google.com/document/d/1G85eKuhSzEnAJBUcgc2ED9rLh3lWM0DfO46wqDf5czw/
 #### Use Case Diagram
 https://www.lucidchart.com/invitations/accept/baba43c6-4b03-4f08-a93b-460b559f1ccd
 
-### Class Diagram
+#### Class Diagram
+###### Back-End
 https://www.lucidchart.com/invitations/accept/583400a4-40ec-4d8f-b4c3-3adf926b1079
+###### Front-End
+https://www.lucidchart.com/invitations/accept/30c3f5d6-3342-4e3e-a8ed-50e6a05fac4f
