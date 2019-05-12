@@ -53,5 +53,11 @@ https://www.lucidchart.com/invitations/accept/30c3f5d6-3342-4e3e-a8ed-50e6a05fac
 #### move_piece sequence diagram
 https://www.lucidchart.com/invitations/accept/f208ebdb-788f-497f-8750-5ec8ffa15272
 
-#### Board and Piece object diagram
+#### Front-End UI sequence diagram
+https://www.lucidchart.com/invitations/accept/57a12b1b-26e1-4a41-8df2-a46152eb2f97
+
+#### Front-End Board/ChessPiece object diagram
+https://www.lucidchart.com/invitations/accept/86e85925-9adb-4e80-87e7-8d1044869f0f
+
+#### Back-End Board and Piece object diagram
 https://www.lucidchart.com/invitations/accept/79d0f616-b2d8-4e9d-9e15-f8abf8d94f38

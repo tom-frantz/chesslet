@@ -4,7 +4,7 @@ import {Board} from "./Board.js";
 import API, {configureAPI} from "./api.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// let data = require('./dummy.json'); //dummy data, delete later
+let data = require('./dummy.json'); //dummy data, delete later
 
 class App extends React.Component {
     constructor(props) {
@@ -13,13 +13,14 @@ class App extends React.Component {
         this.state = {
             username: "",
             password: "",
-            loggedIn: false,
-            inGame: false,
+            loggedIn: true,
+            inGame: true,
             gameUUID: "",
             gameData: {
                 player_1: [],
                 player_2: []
             },
+            gameData: data,
             API: configureAPI(
                 "http://127.0.0.1:5000/",
                 (res) => {
