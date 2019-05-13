@@ -41,6 +41,8 @@ https://trello.com/b/Pwdvc1zz/hey-mayne
 #### Google Docs : Core Structures
 https://docs.google.com/document/d/1G85eKuhSzEnAJBUcgc2ED9rLh3lWM0DfO46wqDf5czw/edit#heading=h.6lsteycwwlpo
 
+## Diagrams
+
 #### Use Case Diagram
 https://www.lucidchart.com/invitations/accept/baba43c6-4b03-4f08-a93b-460b559f1ccd
 
@@ -61,3 +63,9 @@ https://www.lucidchart.com/invitations/accept/86e85925-9adb-4e80-87e7-8d1044869f
 
 #### Back-End Board and Piece object diagram
 https://www.lucidchart.com/invitations/accept/79d0f616-b2d8-4e9d-9e15-f8abf8d94f38
+
+#### Back-End Session object diagram
+https://www.lucidchart.com/invitations/accept/0ddf00aa-c872-4b03-a9ce-324b228074c9
+
+#### add_player sequence diagram
+https://www.lucidchart.com/invitations/accept/95181f12-9020-476f-8fe2-f73da0cc75f8
