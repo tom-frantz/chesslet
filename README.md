@@ -69,3 +69,6 @@ https://www.lucidchart.com/invitations/accept/0ddf00aa-c872-4b03-a9ce-324b228074
 
 #### add_player sequence diagram
 https://www.lucidchart.com/invitations/accept/95181f12-9020-476f-8fe2-f73da0cc75f8
+
+#### Webserver sequence diagram
+https://www.lucidchart.com/invitations/accept/b4563c9a-44ea-4d6f-b883-cb5e391ede25
