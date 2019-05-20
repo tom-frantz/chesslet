@@ -1,0 +1,112 @@
+.header-top {
+  height: auto;
+  padding: 15px;
+  border-bottom: 4px solid grey;
+  margin-bottom: 50px;
+  color: #e8e8e8;
+  background-color: #234884;
+}
+
+.project-title{
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.vert-line{
+  height: 96px;
+  left: -10px;
+  border-left: 1px solid #e8e8e8;
+}
+
+form{
+  font-size: 20px;
+}
+
+.input-header{
+  font-size: 16px;
+  color: #234884;
+}
+
+.or-text{
+  text-align: center;
+  width: auto;
+  display: grid;
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #234884;
+}
+
+.piece-text{
+  font-size: 14px;
+}
+
+.form-input{
+  width: 100%;
+  height: 40px;
+  padding: 3px 10px;
+  border: 1px solid grey;
+  border-radius: .3rem;
+  margin-bottom: 20px !important;
+}
+
+.form-button{
+  background-color: #234884;
+  color: #e8e8e8;
+  text-align: center;
+  border: none;
+}
+
+.form-button:hover{
+  background-color: #2b5ba8;
+}
+
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 20px;
+}
+
+ol, ul {
+  padding-left: 30px;
+}
+
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.status {
+  margin-bottom: 10px;
+}
+
+.square {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 50px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 100px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 100px;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.kbd-navigation .square:focus {
+  background: #ddd;
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-info {
+  margin-left: 20px;
+}

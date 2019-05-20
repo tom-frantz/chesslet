@@ -30,12 +30,14 @@ class Session:
 
         if self.player_1 is None:
             if self.player_2 is not None and player.uuid == self.player_2.uuid:
-                raise PlayerAlreadyAddedException
+                raise PlayerAlreadyAddedException("Player already added")
             self.player_1 = player
         else:
             if self.player_1 is not None and player.uuid == self.player_1.uuid:
-                raise PlayerAlreadyAddedException
+                raise PlayerAlreadyAddedException("Player already added")
             self.player_2 = player
+
+        # TODO some sort of start game message here for the server.
 
     def remove_player(self, player):
         if player.uuid == self.player_1.uuid:
@@ -51,15 +53,19 @@ class Session:
         if player.uuid != requesting_player_uuid:
             raise Exception("TODO")
 
-        try:
-            self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
-            self.player_1_turn = not self.player_1_turn
-        except InvalidMoveException:
-            pass #TODO
-        except InvalidPieceSelectionException:
-            pass #TODO
+        self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
+        self.player_1_turn = not self.player_1_turn
 
     # Allows the board to let the session know that a piece has been taken
     def piece_taken(self, piece):
         player = self.player_1 if self.player_1_turn else self.player_2
         player.score += 5
+
+    def get_game_state(self):
+        # returns a list of players, their updated piece states and their scores
+        game_state = self.board.get_board_state()
+
+        game_state["player_1_score"] = self.player_1.score
+        game_state["player_2_score"] = self.player_2.score
+
+        return game_state
