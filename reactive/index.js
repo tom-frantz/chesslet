@@ -4,7 +4,7 @@ import {Board} from "./Board.js";
 import API, {configureAPI} from "./api.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-// let data = require('./dummy.json'); //dummy data, delete later
+let data = require('./dummy.json'); //dummy data, delete later
 
 class App extends React.Component {
     constructor(props) {
@@ -13,12 +13,14 @@ class App extends React.Component {
         this.state = {
             username: "",
             password: "",
-            loggedIn: false,
+            loggedIn: true,
+            inGame: true,
             gameUUID: "",
             gameData: {
                 player_1: [],
                 player_2: []
             },
+            gameData: data,
             API: configureAPI(
                 "http://127.0.0.1:5000/",
                 (res) => {
@@ -57,18 +59,22 @@ class App extends React.Component {
         let body;
         // change this "if" to == for board, change to != for login
         if (this.state.loggedIn) {
-            body =
-                <div className="game">
-                    <div className="game-board">
-                        <Board
-                            boardState={this.state.gameData}
-                        />
-                    </div>
+            if (this.state.inGame) {
+                body =
+                    <div className="game">
+                        <div className="game-board">
+                            <Board
+                                boardState={this.state.gameData}
+                            />
+                        </div>
+                    </div>;
+            }else{
+                body =
                     <div style={{marginLeft: "20px"}}>
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             API.join_game(this.state.gameUUID, (res) => {
-                                console.log(res);
+                                this.setState({inGame: res.success})
                             })
                         }}>
                             <span className="input-header">Game UUID</span>
@@ -92,7 +98,7 @@ class App extends React.Component {
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             API.create_game((res) => {
-                                console.log(res)
+                                this.setState({inGame: res.success})
                             })
                         }}>
                             <button
@@ -102,8 +108,8 @@ class App extends React.Component {
                                 Create new Game
                             </button>
                         </form>
-                    </div>
-                </div>;
+                    </div>;
+            }
         } else {
             body =
                 <div className="game-info row justify-content-center">
@@ -139,10 +145,6 @@ class App extends React.Component {
                                     Login
                                 </button>
                             </form>
-
-                            <span className="or-text">
-                            Contents below should be on seperate page
-                        </span>
                         </div>
                         <div>{/* status */}</div>
                         <ol>{/* TODO */}</ol>

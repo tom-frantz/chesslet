@@ -41,6 +41,8 @@ https://trello.com/b/Pwdvc1zz/hey-mayne
 #### Google Docs : Core Structures
 https://docs.google.com/document/d/1G85eKuhSzEnAJBUcgc2ED9rLh3lWM0DfO46wqDf5czw/edit#heading=h.6lsteycwwlpo
 
+## Diagrams
+
 #### Use Case Diagram
 https://www.lucidchart.com/invitations/accept/baba43c6-4b03-4f08-a93b-460b559f1ccd
 
@@ -52,3 +54,21 @@ https://www.lucidchart.com/invitations/accept/30c3f5d6-3342-4e3e-a8ed-50e6a05fac
 
 #### move_piece sequence diagram
 https://www.lucidchart.com/invitations/accept/f208ebdb-788f-497f-8750-5ec8ffa15272
+
+#### Front-End UI sequence diagram
+https://www.lucidchart.com/invitations/accept/57a12b1b-26e1-4a41-8df2-a46152eb2f97
+
+#### Front-End Board/ChessPiece object diagram
+https://www.lucidchart.com/invitations/accept/86e85925-9adb-4e80-87e7-8d1044869f0f
+
+#### Back-End Board and Piece object diagram
+https://www.lucidchart.com/invitations/accept/79d0f616-b2d8-4e9d-9e15-f8abf8d94f38
+
+#### Back-End Session object diagram (also includes activity diagram)
+https://www.lucidchart.com/invitations/accept/0ddf00aa-c872-4b03-a9ce-324b228074c9
+
+#### add_player sequence diagram
+https://www.lucidchart.com/invitations/accept/95181f12-9020-476f-8fe2-f73da0cc75f8
+
+#### Webserver sequence diagram
+https://www.lucidchart.com/invitations/accept/b4563c9a-44ea-4d6f-b883-cb5e391ede25

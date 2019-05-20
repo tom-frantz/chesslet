@@ -21,28 +21,25 @@ export class Board extends React.Component {
             size: 6,
             squares: squares,
             whiteIsNext: true,
+            pieceSelected: null,
         };
     }
 
     handleClick(i) {
         const squares = this.state.squares.slice();
-        if (squares[i]) {
+        if (squares[i] == null) {
             return;
         }
-        squares[i] = this.state.whiteIsNext ? 'White' : 'Black';
-        this.setState({
-            squares: squares,
-            whiteIsNext: !this.state.whiteIsNext,
-        });
+        if(squares[i].props.color === 'white' && this.state.whiteIsNext){
+            this.setState({
+                pieceSelected: squares[i].props.piece,
+            });
+        }else if(squares[i].props.color === 'black' && !this.state.whiteIsNext){
+            this.setState({
+                pieceSelected: squares[i].props.piece,
+            });
+        }
     }
-
-    renderSquare(i) {
-        return <Square
-            value={this.state.squares[i]}
-            onClick={() => this.handleClick(i)}
-            key={i}
-        />
-    };
 
     renderGrid(size) {
         const table = [];
@@ -51,11 +48,13 @@ export class Board extends React.Component {
         for (let i = 0; i < size; i++) {
             let squareArr = [];
             for (let j = 0; j < size; j++) {
+                let counter = squareNo;
                 let square = <Square
                     value={squares[squareNo]}
-                    onClick={() => this.handleClick(i)}
+                    onClick={() => this.handleClick(counter)}
                     key={squareNo}
                 />;
+                console.log(square)
                 squareArr.push(square);
                 squareNo++;
             }

@@ -36,6 +36,10 @@ form{
   color: #234884;
 }
 
+.piece-text{
+  font-size: 14px;
+}
+
 .form-input{
   width: 100%;
   height: 40px;
