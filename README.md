@@ -64,7 +64,7 @@ https://www.lucidchart.com/invitations/accept/86e85925-9adb-4e80-87e7-8d1044869f
 #### Back-End Board and Piece object diagram
 https://www.lucidchart.com/invitations/accept/79d0f616-b2d8-4e9d-9e15-f8abf8d94f38
 
-#### Back-End Session object diagram
+#### Back-End Session object diagram (also includes activity diagram)
 https://www.lucidchart.com/invitations/accept/0ddf00aa-c872-4b03-a9ce-324b228074c9
 
 #### add_player sequence diagram
