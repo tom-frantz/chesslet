@@ -31,11 +31,11 @@ class Board:
         for position_offset, piece_type in enumerate(self.piece_types):
             # Player 1
             for i in range(2):
-                position = Point(position_offset if i == 0 else self.board_size - 1 - position_offset, 0)
+                position = Point(position_offset if i == 0 else self.board_size - 1 - position_offset, self.board_size - 1)
                 self.add_piece({piece_type}, position, True)
             # Player 2
             for i in range(2):
-                position = Point(position_offset if i == 0 else self.board_size - 1 - position_offset, self.board_size - 1)
+                position = Point(position_offset if i == 0 else self.board_size - 1 - position_offset, 0)
                 self.add_piece({piece_type}, position, False)
 
         self.update_valid_move_positions()
