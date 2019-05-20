@@ -23,6 +23,9 @@ class Session:
         self.player_2 = None
         self.player_1_turn = True
         self.board = Board(session=self)
+        self.winner = None
+        self.player_1_moves = 0
+        self.player_2_moves = 0
 
     def add_player(self, player):
         if not player.logged_in:
@@ -55,7 +58,17 @@ class Session:
 
         try:
             self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
+            if self.player_1_turn:
+                self.player_1_moves += 1
+            else:
+                self.player_2_moves += 1
             self.player_1_turn = not self.player_1_turn
+
+            if self.player_2_moves == 10 and self.player_1_moves == 10:
+                if self.player_1.score > self.player_2.score:
+                    self.winner = self.player_1.account_name
+                else:
+                    self.winner = self.player_2.account_name
         except InvalidMoveException:
             pass  # TODO
         except InvalidPieceSelectionException:
@@ -74,5 +87,7 @@ class Session:
 
         game_state["player_1_score"] = self.player_1.score
         game_state["player_2_score"] = self.player_2.score
+
+        game_state["winner"] = self.winner
 
         return game_state
