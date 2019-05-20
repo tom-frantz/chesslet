@@ -53,15 +53,8 @@ class Session:
         if player.uuid != requesting_player_uuid:
             raise Exception("TODO")
 
-        try:
-            self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
-            self.player_1_turn = not self.player_1_turn
-        except InvalidMoveException:
-            pass  # TODO
-        except InvalidPieceSelectionException:
-            pass  # TODO
-        finally:
-            return self.board.get_board_state()
+        self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
+        self.player_1_turn = not self.player_1_turn
 
     # Allows the board to let the session know that a piece has been taken
     def piece_taken(self, piece):

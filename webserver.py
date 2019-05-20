@@ -139,6 +139,7 @@ def login(data):
 @socketio.on("create_game")
 @response_decorator
 def create_game(data):
+    # TODO throw error if in game already.
     # data = token (user uuid)
     # res = game_uuid
     game_uuid = server_state.new_game(data["token"])
@@ -189,9 +190,9 @@ def move_piece(data):
         data["combination_state"]
     )
 
-    # emit("move_piece", {"b": server_state.games[data["game_uuid"]].get_board_state()}, room=data["game_uuid"])
+    emit("move_piece", {"b": server_state.games[data["game_uuid"]].get_board_state()}, room=data["game_uuid"])
     return
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, host="0.0.0.0")
