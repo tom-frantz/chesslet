@@ -110,3 +110,11 @@ ol, ul {
 .game-info {
   margin-left: 20px;
 }
+
+.piece-selected{
+  background-color: #6b8dc4;
+}
+
+.selected{
+  background-color: #9bc1ff;
+}

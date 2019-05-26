@@ -5,7 +5,7 @@ import './App.css';
 function Square(props) {
     return (
         <button
-            className="square"
+            className={props.name}
             onClick={props.onClick}
         >
             {props.value}
@@ -27,17 +27,40 @@ export class Board extends React.Component {
 
     handleClick(i) {
         const squares = this.state.squares.slice();
+        if(this.state.pieceSelected){
+            if(this.state.pieceSelected.props.moveset.includes(i)){
+                console.log("MOVE");
+                let pos = this.state.pieceSelected.key;
+                var from_pos = {x: pos % 6, y: Math.floor(pos / 6)};
+                var to_pos = {x: i % 6, y: Math.floor(i / 6)};
+                var combination_state = {
+                    combination_state: this.state.pieceSelected.combination_state
+                }
+                var JSONfrom_pos = JSON.stringify(from_pos);
+                var JSONto_pos = JSON.stringify(to_pos);
+                var JSONcombination_state = JSON.stringify(combination_state);
+                this.props.api.move_piece(JSONfrom_pos, JSONto_pos, JSONcombination_state, (res) => {
+                    console.log("somehting");
+                });
+                return;
+            }
+        }
         if (squares[i] == null) {
+            this.setState({
+                pieceSelected: null,
+            });
             return;
         }
         if(squares[i].props.color === 'white' && this.state.whiteIsNext){
             this.setState({
-                pieceSelected: squares[i].props.piece,
+                pieceSelected: squares[i],
             });
+            return;
         }else if(squares[i].props.color === 'black' && !this.state.whiteIsNext){
             this.setState({
-                pieceSelected: squares[i].props.piece,
+                pieceSelected: squares[i],
             });
+            return;
         }
     }
 
@@ -49,12 +72,22 @@ export class Board extends React.Component {
             let squareArr = [];
             for (let j = 0; j < size; j++) {
                 let counter = squareNo;
+                let className = 'square';
+                if(this.state.pieceSelected != null){
+                    if(this.state.pieceSelected.props.moveset.includes(counter)){
+                        className += ' selected';
+                    }
+                    if(squares[squareNo] != null &&
+                        squares[squareNo].key == this.state.pieceSelected.key){
+                        className += ' piece-selected';
+                    }
+                }
                 let square = <Square
+                    name={className}
                     value={squares[squareNo]}
                     onClick={() => this.handleClick(counter)}
                     key={squareNo}
                 />;
-                console.log(square)
                 squareArr.push(square);
                 squareNo++;
             }
@@ -77,30 +110,61 @@ export class Board extends React.Component {
         let pieces = this.props.boardState.player_1;
         for(let i = 0; i < pieces.length; i++){
             let position = pieces[i].position.x + (pieces[i].position.y * 6);
+            let moves = [];
+            for (let j = 0; j < pieces[i].valid_move_positions.Rook.length; j++){
+                moves.push(pieces[i].valid_move_positions.Rook[j].x +
+                    (pieces[i].valid_move_positions.Rook[j].y * 6));
+            }
+            for (let j = 0; j < pieces[i].valid_move_positions.Bishop.length; j++){
+                moves.push(pieces[i].valid_move_positions.Bishop[j].x +
+                    (pieces[i].valid_move_positions.Bishop[j].y * 6));
+            }
+            for (let j = 0; j < pieces[i].valid_move_positions.Knight.length; j++){
+                moves.push(pieces[i].valid_move_positions.Knight[j].x +
+                    (pieces[i].valid_move_positions.Knight[j].y * 6));
+            }
             squares[position] = <ChessPiece
                 color={'black'}
                 piece={pieces[i].combination_state}
-                moveset={pieces[i].valid_move_positions}
+                moveset={moves}
+                key={position}
             />;
         }
         pieces = this.props.boardState.player_2;
         for(let i = 0; i < pieces.length; i++){
             let position = pieces[i].position.x + (pieces[i].position.y * 6);
+            let moves = [];
+            for (let j = 0; j < pieces[i].valid_move_positions.Rook.length; j++){
+                moves.push(pieces[i].valid_move_positions.Rook[j].x +
+                    (pieces[i].valid_move_positions.Rook[j].y * 6));
+            }
+            for (let j = 0; j < pieces[i].valid_move_positions.Bishop.length; j++){
+                moves.push(pieces[i].valid_move_positions.Bishop[j].x +
+                    (pieces[i].valid_move_positions.Bishop[j].y * 6));
+            }
+            for (let j = 0; j < pieces[i].valid_move_positions.Knight.length; j++){
+                moves.push(pieces[i].valid_move_positions.Knight[j].x +
+                    (pieces[i].valid_move_positions.Knight[j].y * 6));
+            }
             squares[position] = <ChessPiece
                 color={'white'}
                 piece={pieces[i].combination_state}
-                moveset={pieces[i].valid_move_positions}
+                moveset={moves}
+                key={position}
             />;
         }
         return squares;
     }
 
     render() {
+        const API = this.props.api;
+
         let status = 'Next player: ' + (this.state.whiteIsNext ? 'White' : 'Black');
 
         return (
             <div>
                 <div className="status">{status}</div>
+                <div className="status">Game UUID: {this.props.gameUUID}</div>
                 {this.renderGrid(this.state.size)}
                 <br/>
                 <button

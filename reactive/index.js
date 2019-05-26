@@ -22,7 +22,7 @@ class App extends React.Component {
             },
             gameData: data,
             API: configureAPI(
-                "http://127.0.0.1:5000/",
+                "http://10.132.36.3:5000/",
                 (res) => {
                     console.log("YHEET?");
                     this.setState({gameData: res.b})},
@@ -64,6 +64,8 @@ class App extends React.Component {
                     <div className="game">
                         <div className="game-board">
                             <Board
+                                api = {API}
+                                gameUUID={this.state.gameUUID}
                                 boardState={this.state.gameData}
                             />
                         </div>
@@ -98,7 +100,7 @@ class App extends React.Component {
                         <form onSubmit={(e) => {
                             e.preventDefault();
                             API.create_game((res) => {
-                                this.setState({inGame: res.success})
+                                this.setState({inGame: res.success, gameUUID: res.game_uuid})
                             })
                         }}>
                             <button

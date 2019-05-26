@@ -4,7 +4,6 @@ import './App.css';
 export class ChessPiece extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props);
     }
 
     render() {
@@ -23,11 +22,17 @@ export class ChessPiece extends React.Component {
                 element = <i style={{color: color}} className='fas fa-chess-knight'/>;
             }
         }else{
-            let pieceTitles = '';
+            var pieceIcon1, pieceIcon2, pieceIcon3;
             for (let i = 0; i < this.props.piece.length; i++){
-                pieceTitles += this.props.piece[i] + '\n';
+                if (this.props.piece[i] === 'Rook') {
+                    pieceIcon1 = <i style={{color: color}} className='fas fa-chess-rook'/>;
+                } else if (this.props.piece[i] === 'Bishop') {
+                    pieceIcon2 = <i style={{color: color}} className='fas fa-chess-bishop'/>;
+                } else if (this.props.piece[i] === 'Knight') {
+                    pieceIcon3 = <i style={{color: color}} className='fas fa-chess-knight'/>;
+                }
             }
-            element = <span className='piece-text'>{pieceTitles}</span>;
+            element = <>{pieceIcon1}{pieceIcon2}{pieceIcon3}</>
         }
 
         return (
