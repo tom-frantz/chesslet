@@ -16,12 +16,16 @@ class PlayerNotAddedException(Exception):
     pass
 
 
+class NotCurrentPlayerTryingToMoveException(Exception):
+    pass
+
+
 class Session:
     def __init__(self, uuid):
         self.uuid = uuid
         self.player_1 = None
         self.player_2 = None
-        self.player_1_turn = True
+        self.player_1_turn = False
         self.board = Board(session=self)
         self.winner = None
         self.player_1_moves = 0
@@ -54,13 +58,12 @@ class Session:
         player = self.player_1 if self.player_1_turn else self.player_2
 
         if player.uuid != requesting_player_uuid:
-            raise Exception("TODO")
+            raise NotCurrentPlayerTryingToMoveException("The wrong player was trying to move!")
 
         if self.player_1_turn:
             self.player_1_moves += 1
         else:
             self.player_2_moves += 1
-        self.player_1_turn = not self.player_1_turn
 
         if self.player_2_moves == 10 and self.player_1_moves == 10:
             if self.player_1.score > self.player_2.score:
@@ -71,7 +74,6 @@ class Session:
         self.board.move_piece(self.player_1_turn, curr_pos, new_pos, combination_state)
         self.player_1_turn = not self.player_1_turn
 
-
     # Allows the board to let the session know that a piece has been taken
     def piece_taken(self, piece):
         player = self.player_1 if self.player_1_turn else self.player_2
@@ -80,6 +82,11 @@ class Session:
     def get_game_state(self):
         # returns a list of players, their updated piece states and their scores
         game_state = self.board.get_board_state()
+
+        game_state["player_1_uuid"] = self.player_1.uuid
+        game_state["player_2_uuid"] = self.player_2.uuid
+
+        game_state["current_player"] = self.player_1.uuid if self.player_1_turn else self.player_2.uuid
 
         game_state["player_1_score"] = self.player_1.score
         game_state["player_2_score"] = self.player_2.score

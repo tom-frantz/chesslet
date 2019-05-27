@@ -5,10 +5,10 @@ import flask.json
 from flask_socketio import SocketIO, send, emit, join_room
 import json
 
-from chesslet.board import Board
+from chesslet.board import Board, InvalidPieceSelectionException
 from chesslet.player import Player, AlreadyLoggedInException, InvalidPasswordException, PlayerNotLoggedIn
 from chesslet.point import Point
-from chesslet.session import Session, PlayerAlreadyAddedException
+from chesslet.session import Session, PlayerAlreadyAddedException, NotCurrentPlayerTryingToMoveException
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -35,7 +35,9 @@ def response_decorator(func):
             AlreadyLoggedInException,
             InvalidPasswordException,
             PlayerNotLoggedIn,
-            PlayerAlreadyAddedException
+            PlayerAlreadyAddedException,
+            InvalidPieceSelectionException,
+            NotCurrentPlayerTryingToMoveException
         ) as e:
             return {"success": False, "error": str(e)}
         except Exception as e:
@@ -187,10 +189,10 @@ def move_piece(data):
         data["token"],
         Point(data["from_pos"]["x"], data["from_pos"]["y"]),
         Point(data["to_pos"]["x"], data["to_pos"]["y"]),
-        data["combination_state"]
+        data["combination_state"] if data["combination_state"] else None
     )
 
-    emit("move_piece", {"b": server_state.games[data["game_uuid"]].get_board_state()}, room=data["game_uuid"])
+    emit("move piece", {"b": server_state.games[data["game_uuid"]].get_game_state()}, json=True, room=data["game_uuid"])
     return
 
 

@@ -13,20 +13,33 @@ class App extends React.Component {
         this.state = {
             username: "",
             password: "",
-            loggedIn: true,
-            inGame: true,
+            loggedIn: false,
+            inGame: false,
+            myTurn: false,
             gameUUID: "",
             gameData: {
                 player_1: [],
                 player_2: []
             },
-            gameData: data,
             API: configureAPI(
-                "http://10.132.36.3:5000/",
-                (res) => {
-                    console.log("YHEET?");
-                    this.setState({gameData: res.b})},
-                (res) => {this.setState({gameData: res.b})}
+                "http://0.0.0.0:5000/",
+                (res, API) => {
+                    console.log("GAME STARTED CALLBACK");
+                    console.log("WE ARE:",  res.b.player_1_uuid === API.token ? "black" : "white");
+                    this.setState({
+                        gameData: res.b,
+                        ourTurn: res.b.current_player === API.token,
+                        weAre: res.b.player_1_uuid === API.token ? "black" : "white"
+                    });
+                },
+                (res, API) => {
+                    console.log("PIECE MOVED CALLBACK!");
+                    console.log("OUR TURN AFTER MOVE:", res.b.current_player === API.token);
+                    this.setState({
+                        gameData: res.b,
+                        ourTurn: res.b.current_player === API.token
+                    });
+                }
             )
         }
     }
@@ -54,8 +67,6 @@ class App extends React.Component {
     render() {
         const API = this.state.API;
 
-        console.log(this.state.gameData);
-
         let body;
         // change this "if" to == for board, change to != for login
         if (this.state.loggedIn) {
@@ -67,6 +78,8 @@ class App extends React.Component {
                                 api = {API}
                                 gameUUID={this.state.gameUUID}
                                 boardState={this.state.gameData}
+                                ourTurn={this.state.ourTurn}
+                                weAre={this.state.weAre}
                             />
                         </div>
                     </div>;

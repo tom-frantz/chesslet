@@ -19,44 +19,46 @@ export class Board extends React.Component {
         let squares = this.placePieces();
         this.state = {
             size: 6,
-            squares: squares,
-            whiteIsNext: true,
             pieceSelected: null,
         };
     }
 
-    handleClick(i) {
-        const squares = this.state.squares.slice();
-        if(this.state.pieceSelected){
-            if(this.state.pieceSelected.props.moveset.includes(i)){
+    // Squares
+    handleClick(i, squares) {
+        const {pieceSelected} = this.state;
+
+        if(pieceSelected){
+            if(pieceSelected.props.moveset.includes(i)){
                 console.log("MOVE");
-                let pos = this.state.pieceSelected.key;
-                var from_pos = {x: pos % 6, y: Math.floor(pos / 6)};
-                var to_pos = {x: i % 6, y: Math.floor(i / 6)};
-                var combination_state = {
+                const pos = this.state.pieceSelected.key;
+                const from_pos = {x: pos % 6, y: Math.floor(pos / 6)};
+                const to_pos = {x: i % 6, y: Math.floor(i / 6)};
+                const combination_state = {
                     combination_state: this.state.pieceSelected.combination_state
-                }
-                var JSONfrom_pos = JSON.stringify(from_pos);
-                var JSONto_pos = JSON.stringify(to_pos);
-                var JSONcombination_state = JSON.stringify(combination_state);
-                this.props.api.move_piece(JSONfrom_pos, JSONto_pos, JSONcombination_state, (res) => {
-                    console.log("somehting");
+                };
+
+                this.props.api.move_piece(this.props.gameUUID, from_pos, to_pos, combination_state, (res) => {
+                    console.log(res);
                 });
                 return;
             }
         }
+
+        console.log(squares[i]);
+
         if (squares[i] == null) {
             this.setState({
                 pieceSelected: null,
             });
             return;
         }
-        if(squares[i].props.color === 'white' && this.state.whiteIsNext){
+        // TODO
+        if(squares[i].props.color === 'white' && this.props.ourTurn && this.props.weAre === "white"){
             this.setState({
                 pieceSelected: squares[i],
             });
             return;
-        }else if(squares[i].props.color === 'black' && !this.state.whiteIsNext){
+        }else if(squares[i].props.color === 'black' && this.props.ourTurn && this.props.weAre === "black"){
             this.setState({
                 pieceSelected: squares[i],
             });
@@ -64,9 +66,9 @@ export class Board extends React.Component {
         }
     }
 
-    renderGrid(size) {
+    // Squares
+    renderGrid(size, squares) {
         const table = [];
-        let squares = this.placePieces();
         let squareNo = 0;
         for (let i = 0; i < size; i++) {
             let squareArr = [];
@@ -85,7 +87,7 @@ export class Board extends React.Component {
                 let square = <Square
                     name={className}
                     value={squares[squareNo]}
-                    onClick={() => this.handleClick(counter)}
+                    onClick={() => this.handleClick(counter, squares)}
                     key={squareNo}
                 />;
                 squareArr.push(square);
@@ -96,32 +98,25 @@ export class Board extends React.Component {
         return table;
     }
 
-    resetBoard() {
-        let squares = this.placePieces();
-        this.setState({
-            size: 6,
-            squares: squares,
-            whiteIsNext: true,
-        });
-    }
-
+    // WHERE WE GET SQUARES FROM
     placePieces() {
         let squares = Array(36).fill(null);
         let pieces = this.props.boardState.player_1;
         for(let i = 0; i < pieces.length; i++){
             let position = pieces[i].position.x + (pieces[i].position.y * 6);
             let moves = [];
-            for (let j = 0; j < pieces[i].valid_move_positions.Rook.length; j++){
-                moves.push(pieces[i].valid_move_positions.Rook[j].x +
-                    (pieces[i].valid_move_positions.Rook[j].y * 6));
+            let validMovePositions = pieces[i].valid_move_positions;
+            for (let j = 0; j < validMovePositions.Rook.length; j++){
+                moves.push(validMovePositions.Rook[j].x +
+                    (validMovePositions.Rook[j].y * 6));
             }
-            for (let j = 0; j < pieces[i].valid_move_positions.Bishop.length; j++){
-                moves.push(pieces[i].valid_move_positions.Bishop[j].x +
-                    (pieces[i].valid_move_positions.Bishop[j].y * 6));
+            for (let j = 0; j < validMovePositions.Bishop.length; j++){
+                moves.push(validMovePositions.Bishop[j].x +
+                    (validMovePositions.Bishop[j].y * 6));
             }
-            for (let j = 0; j < pieces[i].valid_move_positions.Knight.length; j++){
-                moves.push(pieces[i].valid_move_positions.Knight[j].x +
-                    (pieces[i].valid_move_positions.Knight[j].y * 6));
+            for (let j = 0; j < validMovePositions.Knight.length; j++){
+                moves.push(validMovePositions.Knight[j].x +
+                    (validMovePositions.Knight[j].y * 6));
             }
             squares[position] = <ChessPiece
                 color={'black'}
@@ -158,20 +153,15 @@ export class Board extends React.Component {
 
     render() {
         const API = this.props.api;
-
+        const squares = this.placePieces();
         let status = 'Next player: ' + (this.state.whiteIsNext ? 'White' : 'Black');
 
         return (
             <div>
                 <div className="status">{status}</div>
                 <div className="status">Game UUID: {this.props.gameUUID}</div>
-                {this.renderGrid(this.state.size)}
+                {this.renderGrid(this.state.size, squares)}
                 <br/>
-                <button
-                    onClick={() => this.resetBoard()}
-                >
-                    reset
-                </button>
             </div>
         );
     }

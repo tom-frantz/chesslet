@@ -9,8 +9,8 @@ class API {
         this.serverIO = io(connection);
 
         this.serverIO.on("connect", () => {console.log("Connected!")});
-        this.serverIO.on("game start", gameStartCallback);
-        this.serverIO.on("move piece", movePieceCallback)
+        this.serverIO.on("game start", (res) => gameStartCallback(res, this));
+        this.serverIO.on("move piece", (res) => movePieceCallback(res, this));
 
     }
 
@@ -67,11 +67,11 @@ class API {
         this.serverIO.current_game = null;
     }
 
-    move_piece(from_piece, to_piece, combination_state, callback) {
+    move_piece(game_uuid, from_pos, to_pos, combination_state, callback) {
 
         this.serverIO.emit(
             "move_piece",
-            {token: this.token, from_piece, to_piece, combination_state},
+            {token: this.token, from_pos, to_pos, combination_state, game_uuid},
             callback
         )
     };
