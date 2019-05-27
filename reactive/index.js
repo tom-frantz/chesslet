@@ -25,11 +25,11 @@ class App extends React.Component {
                 "http://0.0.0.0:5000/",
                 (res, API) => {
                     console.log("GAME STARTED CALLBACK");
-                    console.log("WE ARE:",  res.b.player_1_uuid === API.token ? "black" : "white");
+                    console.log("WE ARE:",  res.b.player_1_uuid === API.token ? "Black" : "White");
                     this.setState({
                         gameData: res.b,
                         ourTurn: res.b.current_player === API.token,
-                        weAre: res.b.player_1_uuid === API.token ? "black" : "white"
+                        weAre: res.b.player_1_uuid === API.token ? "Black" : "White"
                     });
                 },
                 (res, API) => {
