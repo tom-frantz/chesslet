@@ -24,6 +24,7 @@ export class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            subPiece: null,
             pieceSelected: null,
             pieceCombination: null,
         };
@@ -31,60 +32,101 @@ export class Board extends React.Component {
 
     // Squares
     handleClick(i, squares) {
-        const {pieceSelected} = this.state;
+        const {pieceSelected, subPiece} = this.state;
         const {ourTurn, weAre, gameUUID, api} = this.props;
 
 
         if(pieceSelected){
-            if(pieceSelected.props.moveset.includes(i)){
-                console.log("MOVE");
-                const pos = pieceSelected.key;
-            const from_pos = {x: pos % 6, y: Math.floor(pos / 6)};
-                const to_pos = {x: i % 6, y: Math.floor(i / 6)};
+            if(subPiece){
+                if(subPiece.props.rookMoveset.includes(i) ||
+                    subPiece.props.bishopMoveset.includes(i) ||
+                    subPiece.props.knightMoveset.includes(i)){
+                        const pos = pieceSelected.key;
+                        const from_pos = {x: pos % 6, y: Math.floor(pos / 6)};
+                        const to_pos = {x: i % 6, y: Math.floor(i / 6)};
+                        const combination_state = {
+                            combination_state: subPiece.props.piece
+                        };
 
-                const combination_state = {
-                    combination_state: pieceSelected.combination_state
-                };
-
-                api.move_piece(gameUUID, from_pos, to_pos, combination_state, (res) => {
-                    if (res.success) {
-                        this.setState({
-                            pieceSelected: null,
-                            pieceCombination: null,
+                        console.log("SPLIT");
+                        api.move_piece(gameUUID, from_pos, to_pos, combination_state, (res) => {
+                            if (res.success) {
+                                this.setState({
+                                    subPiece: null,
+                                    pieceSelected: null,
+                                    pieceCombination: null,
+                                });
+                            }
                         });
+                        return;
                     }
-                });
-                return;
+            }else{
+                if(pieceSelected.props.rookMoveset.includes(i) ||
+                    pieceSelected.props.bishopMoveset.includes(i) ||
+                    pieceSelected.props.knightMoveset.includes(i)){
+                    const pos = pieceSelected.key;
+                    const from_pos = {x: pos % 6, y: Math.floor(pos / 6)};
+                    const to_pos = {x: i % 6, y: Math.floor(i / 6)};
+                    const combination_state = {
+                        combination_state: pieceSelected.props.piece
+                    };
+
+                    console.log("MOVE");
+                    api.move_piece(gameUUID, from_pos, to_pos, combination_state, (res) => {
+                        if (res.success) {
+                            this.setState({
+                                subPiece: null,
+                                pieceSelected: null,
+                                pieceCombination: null,
+                            });
+                        }
+                    });
+                    return;
+                }
             }
         }
 
         if (squares[i] == null) {
             this.setState({
+                subPiece: null,
                 pieceSelected: null,
                 pieceCombination: null,
             });
             return;
         }
-        // TODO
 
-        if(squares[i].props.color === 'white' || ourTurn && weAre === "White"){
-            this.setState({
-                pieceSelected: squares[i],
-                pieceCombination: squares[i].props.piece,
-            });
+        if(squares[i].props.color === 'white' && ourTurn && weAre === "White"){
+            if(i >= 100){
+                this.setState({
+                    subPiece: squares[i],
+                });
+            }else{
+                this.setState({
+                    pieceSelected: squares[i],
+                    pieceCombination: squares[i].props.piece,
+                    subPiece: null,
+                });
+            }
             return;
-        }else if(squares[i].props.color === 'black' || ourTurn && weAre === "Black"){
-            this.setState({
-                pieceSelected: squares[i],
-                pieceCombination: squares[i].props.piece,
-            });
+        }else if(squares[i].props.color === 'black' && ourTurn && weAre === "Black"){
+            if(i >= 100){
+                this.setState({
+                    subPiece: squares[i],
+                });
+            }else{
+                this.setState({
+                    pieceSelected: squares[i],
+                    pieceCombination: squares[i].props.piece,
+                    subPiece: null,
+                });
+            }
             return;
         }
     }
 
     // Squares
     renderGrid(size, squares) {
-        const {pieceSelected} = this.state;
+        const {pieceSelected, subPiece} = this.state;
 
         const table = [];
         let squareNo = 0;
@@ -96,8 +138,18 @@ export class Board extends React.Component {
                 let className = 'square';
                 let subPiecesArr = ['', '', ''];
                 if(pieceSelected != null){
-                    if(pieceSelected.props.moveset.includes(counter)){
-                        className += ' selected';
+                    if(subPiece != null){
+                        if(subPiece.props.rookMoveset.includes(counter) ||
+                            subPiece.props.bishopMoveset.includes(counter) ||
+                            subPiece.props.knightMoveset.includes(counter)){
+                            className += ' selected';
+                        }
+                    }else{
+                        if(pieceSelected.props.rookMoveset.includes(counter) ||
+                            pieceSelected.props.bishopMoveset.includes(counter) ||
+                            pieceSelected.props.knightMoveset.includes(counter)){
+                            className += ' selected';
+                        }
                     }
                     if(squares[squareNo] != null &&
                         squares[squareNo].key == pieceSelected.key){
@@ -108,20 +160,41 @@ export class Board extends React.Component {
                                 if (this.props.weAre === 'Black') {
                                     color = 'black';
                                 }
-                                let divName = 'position-relative sub' + k;
+                                let divName = 'position-absolute sub' + k;
                                 let pieceClass = 'square sub-piece';
-                                console.log(pieceClass);
-                                let subPiece = <ChessPiece
+                                let piece = [this.state.pieceCombination[k]]
+                                let rookMoves = [];
+                                let bishopMoves = [];
+                                let knightMoves = [];
+                                if(this.state.pieceCombination[k] == "Rook"){
+                                    rookMoves = this.state.pieceSelected.props.rookMoveset;
+                                }
+                                if(this.state.pieceCombination[k] == "Bishop"){
+                                    bishopMoves = this.state.pieceSelected.props.bishopMoveset;
+                                }
+                                if(this.state.pieceCombination[k] == "Knight"){
+                                    knightMoves = this.state.pieceSelected.props.knightMoveset;
+                                }
+                                let newSubPiece = <ChessPiece
                                     color={color}
-                                    piece={this.state.pieceCombination[k]}
-                                    moveset={pieceSelected.props.moveset}
-                                    key={k}
+                                    piece={piece}
+                                    rookMoveset={rookMoves}
+                                    bishopMoveset={bishopMoves}
+                                    knightMoveset={knightMoves}
+                                    key={100 + k}
                                     />;
+                                if(subPiece != null){
+                                    if(newSubPiece.key == subPiece.key){
+                                        className = 'square';
+                                        pieceClass += ' piece-selected';
+                                    }
+                                }
+                                squares[newSubPiece.key] = newSubPiece;
                                 subPiecesArr[k] = <Square
                                     divName={divName}
                                     name={pieceClass}
-                                    value={subPiece}
-                                    onClick={() => this.handleClick(counter, squares)}
+                                    value={newSubPiece}
+                                    onClick={() => this.handleClick(newSubPiece.key, squares)}
                                     subPieces=''
                                     />;
                             }
@@ -151,58 +224,66 @@ export class Board extends React.Component {
         let squares = Array(36).fill(null);
         for(const piece of boardState.player_1){
             let position = piece.position.x + (piece.position.y * 6);
-            let moves = [];
+            let rookMoves = [];
+            let bishopMoves = [];
+            let knightMoves = [];
 
             let validMovePositions = piece.valid_move_positions;
 
             for (let j = 0; j < validMovePositions.Rook.length; j++){
-                moves.push(validMovePositions.Rook[j].x +
+                rookMoves.push(validMovePositions.Rook[j].x +
                     (validMovePositions.Rook[j].y * 6));
             }
 
             for (let j = 0; j < validMovePositions.Bishop.length; j++){
-                moves.push(validMovePositions.Bishop[j].x +
+                bishopMoves.push(validMovePositions.Bishop[j].x +
                     (validMovePositions.Bishop[j].y * 6));
             }
 
             for (let j = 0; j < validMovePositions.Knight.length; j++){
-                moves.push(validMovePositions.Knight[j].x +
+                knightMoves.push(validMovePositions.Knight[j].x +
                     (validMovePositions.Knight[j].y * 6));
             }
 
             squares[position] = <ChessPiece
                 color={'black'}
                 piece={piece.combination_state}
-                moveset={moves}
+                rookMoveset={rookMoves}
+                bishopMoveset={bishopMoves}
+                knightMoveset={knightMoves}
                 key={position}
             />;
         }
 
         for(const piece of boardState.player_2){
             let position = piece.position.x + (piece.position.y * 6);
-            let moves = [];
+            let rookMoves = [];
+            let bishopMoves = [];
+            let knightMoves = [];
 
             const validMovePositions1 = piece.valid_move_positions;
 
             for (let j = 0; j < validMovePositions1.Rook.length; j++){
-                moves.push(validMovePositions1.Rook[j].x +
+                rookMoves.push(validMovePositions1.Rook[j].x +
                     (validMovePositions1.Rook[j].y * 6));
             }
 
             for (let j = 0; j < validMovePositions1.Bishop.length; j++){
-                moves.push(validMovePositions1.Bishop[j].x +
+                bishopMoves.push(validMovePositions1.Bishop[j].x +
                     (validMovePositions1.Bishop[j].y * 6));
             }
 
             for (let j = 0; j < validMovePositions1.Knight.length; j++){
-                moves.push(validMovePositions1.Knight[j].x +
+                knightMoves.push(validMovePositions1.Knight[j].x +
                     (validMovePositions1.Knight[j].y * 6));
             }
 
             squares[position] = <ChessPiece
                 color={'white'}
                 piece={piece.combination_state}
-                moveset={moves}
+                rookMoveset={rookMoves}
+                bishopMoveset={bishopMoves}
+                knightMoveset={knightMoves}
                 key={position}
             />;
         }

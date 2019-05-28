@@ -107,24 +107,21 @@ ol, ul {
 }
 
 .sub0{
-  position: relative;
-  z-index: -1;
-  right: -50px;
-  top: -25px;
+  z-index: 1000;
+  right: -60px;
+  top: -49px;
 }
 
 .sub1{
-  position: relative;
-  z-index: -1;
-  right: -50px;
-  top: 25px;
+  z-index: 1000;
+  right: -60px;
+  bottom: -49px;
 }
 
 .sub2{
-  position: relative;
-  z-index: -1;
-  right: -50px;
-  bottom: -25px;
+  z-index: 1000;
+  right: -85px;
+  top: 25px;
 }
 
 .square:focus {
