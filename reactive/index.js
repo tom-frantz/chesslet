@@ -13,14 +13,15 @@ class App extends React.Component {
         this.state = {
             username: "",
             password: "",
-            loggedIn: false,
-            inGame: false,
+            loggedIn: true,
+            inGame: true,
             myTurn: false,
             gameUUID: "",
             gameData: {
                 player_1: [],
                 player_2: []
             },
+            gameData: data,
             API: configureAPI(
                 "http://0.0.0.0:5000/",
                 (res, API) => {
@@ -68,7 +69,6 @@ class App extends React.Component {
         const API = this.state.API;
 
         let body;
-        // change this "if" to == for board, change to != for login
         if (this.state.loggedIn) {
             if (this.state.inGame) {
                 body =

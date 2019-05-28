@@ -80,6 +80,7 @@ ol, ul {
 }
 
 .square {
+  position: relative;
   background: #fff;
   border: 1px solid #999;
   float: left;
@@ -92,6 +93,38 @@ ol, ul {
   padding: 0;
   text-align: center;
   width: 100px;
+}
+
+.square-container{
+  float: left;
+}
+
+.sub-piece {
+  font-size: 25px;
+  height: 50px;
+  width: 50px;
+  float: none;
+}
+
+.sub0{
+  position: relative;
+  z-index: -1;
+  right: -50px;
+  top: -25px;
+}
+
+.sub1{
+  position: relative;
+  z-index: -1;
+  right: -50px;
+  top: 25px;
+}
+
+.sub2{
+  position: relative;
+  z-index: -1;
+  right: -50px;
+  bottom: -25px;
 }
 
 .square:focus {
