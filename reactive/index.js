@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {Board} from "./Board.js";
-import API, {configureAPI} from "./api.js";
+import API, {configureAPI} from "./utils/api.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-let data = require('./dummy.json'); //dummy data, delete later
+import {Board} from "./containers/Board.js";
+import Login from "./containers/Login";
+import ConnectToGame from "./containers/ConnectToGame";
+
+let data = require('./utils/dummy.json'); //dummy data, delete later
 
 class App extends React.Component {
     constructor(props) {
@@ -26,7 +29,7 @@ class App extends React.Component {
                 "http://0.0.0.0:5000/",
                 (res, API) => {
                     console.log("GAME STARTED CALLBACK");
-                    console.log("WE ARE:",  res.b.player_1_uuid === API.token ? "Black" : "White");
+                    console.log("WE ARE:", res.b.player_1_uuid === API.token ? "Black" : "White");
                     this.setState({
                         gameData: res.b,
                         ourTurn: res.b.current_player === API.token,
@@ -44,8 +47,6 @@ class App extends React.Component {
             )
         }
     }
-
-    componentDidMount() {}
 
     onUsernameChange = (event) => {
         this.setState({
@@ -65,107 +66,31 @@ class App extends React.Component {
         })
     };
 
+    login = () => {
+        this.state.API.login(
+            this.state.username,
+            this.state.password,
+            (res) => {
+                this.setState({loggedIn: res.success})
+            }
+        )
+    };
+
+    joinGame = () => {
+        this.state.API.join_game(this.state.gameUUID, (res) => {
+            this.setState({inGame: res.success})
+        })
+    };
+
+    createGame = () => {
+        this.state.API.create_game((res) => {
+            this.setState({inGame: res.success, gameUUID: res.game_uuid})
+        })
+    };
+
     render() {
         const API = this.state.API;
 
-        let body;
-        if (this.state.loggedIn) {
-            if (this.state.inGame) {
-                body =
-                    <div className="game">
-                        <div className="game-board">
-                            <Board
-                                api = {API}
-                                gameUUID={this.state.gameUUID}
-                                boardState={this.state.gameData}
-                                ourTurn={this.state.ourTurn}
-                                weAre={this.state.weAre}
-                            />
-                        </div>
-                    </div>;
-            }else{
-                body =
-                    <div style={{marginLeft: "20px"}}>
-                        <form onSubmit={(e) => {
-                            e.preventDefault();
-                            API.join_game(this.state.gameUUID, (res) => {
-                                this.setState({inGame: res.success})
-                            })
-                        }}>
-                            <span className="input-header">Game UUID</span>
-                            <input
-                                className="form-input"
-                                value={this.state.gameUUID}
-                                onChange={this.onGameUUIDChange}
-                            />
-                            <button
-                                type="submit"
-                                className="form-input form-button"
-                            >
-                                Join Game
-                            </button>
-                        </form>
-
-                        <span className="or-text">
-                            or
-                        </span>
-
-                        <form onSubmit={(e) => {
-                            e.preventDefault();
-                            API.create_game((res) => {
-                                this.setState({inGame: res.success, gameUUID: res.game_uuid})
-                            })
-                        }}>
-                            <button
-                                type="submit"
-                                className="form-input form-button"
-                            >
-                                Create new Game
-                            </button>
-                        </form>
-                    </div>;
-            }
-        } else {
-            body =
-                <div className="game-info row justify-content-center">
-                    <div className="col-6">
-                        <div>
-                            <form onSubmit={(e) => {
-                                e.preventDefault();
-                                API.login(
-                                    this.state.username,
-                                    this.state.password,
-                                    (res) => {
-                                        this.setState({loggedIn: res.success})
-                                    }
-                                )
-                            }}>
-                                <span className="input-header">Username</span>
-                                <input
-                                    className="form-input"
-                                    value={this.state.username}
-                                    onChange={this.onUsernameChange}
-                                />
-                                <span className="input-header">Password</span>
-                                <input
-                                    className="form-input"
-                                    type='password'
-                                    value={this.state.password}
-                                    onChange={this.onPasswordChange}
-                                />
-                                <button
-                                    type="submit"
-                                    className="form-input form-button"
-                                >
-                                    Login
-                                </button>
-                            </form>
-                        </div>
-                        <div>{/* status */}</div>
-                        <ol>{/* TODO */}</ol>
-                    </div>
-                </div>;
-        }
         return (
             <div>
                 <div className="container-fluid header-top">
@@ -200,7 +125,36 @@ class App extends React.Component {
                     </div>
                 </div>
                 <div className="container">
-                    {body}
+                    {
+                        this.state.loggedIn &&
+                        this.state.inGame &&
+                        <Board
+                            api={API}
+                            gameUUID={this.state.gameUUID}
+                            boardState={this.state.gameData}
+                            ourTurn={this.state.ourTurn}
+                            weAre={this.state.weAre}
+                        />
+                    } {
+                        this.state.loggedIn &&
+                        !this.state.inGame &&
+                        <ConnectToGame
+                            gameUUID={this.state.gameUUID}
+                            onGameUUIDChange={this.onGameUUIDChange}
+                            joinGame={this.joinGame}
+                            createGame={this.createGame}
+                        />
+                    } {
+                        !this.state.loggedIn &&
+                        <Login
+                            username={this.state.username}
+                            password={this.state.password}
+
+                            onUsernameChange={this.onUsernameChange}
+                            onPasswordChange={this.onPasswordChange}
+                            login={this.login}
+                        />
+                    }
                 </div>
             </div>
         );

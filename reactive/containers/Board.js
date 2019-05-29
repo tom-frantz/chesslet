@@ -1,6 +1,6 @@
 import React from 'react';
-import {ChessPiece} from './ChessPiece.js';
-import './App.css';
+import {ChessPiece} from '../components/ChessPiece.js';
+import '../css/App.css';
 
 
 const SIZE = 6;
@@ -292,15 +292,20 @@ export class Board extends React.Component {
 
     render() {
         const squares = this.placePieces();
-        let status = 'Next player: ' + (this.state.whiteIsNext ? 'White' : 'Black');
+        const {weAre, ourTurn} = this.props;
+        let status = 'Next player: ' + (weAre === "White" && ourTurn || weAre === "Black" && !ourTurn ? 'White' : 'Black');
 
         return (
-            <div>
-                <div className="status">{status}</div>
-                <div className="status">we are: {this.props.weAre}</div>
-                <div className="status">Game UUID: {this.props.gameUUID}</div>
-                {this.renderGrid(SIZE, squares)}
-                <br/>
+            <div className="game">
+                <div className="game-board">
+                    <div>
+                        <div className="status">{status}</div>
+                        <div className="status">we are: {this.props.weAre}</div>
+                        <div className="status">Game UUID: {this.props.gameUUID}</div>
+                        {this.renderGrid(SIZE, squares)}
+                        <br/>
+                    </div>
+                </div>
             </div>
         );
     }
