@@ -69,7 +69,7 @@ class Board:
                             else:
                                 # If the other_piece belongs to the other team or it is able to be combined with the piece
                                 if (
-                                    (piece in self.player_1_pieces != other_piece in self.player_1_pieces)
+                                    ((piece in self.player_1_pieces) != (other_piece in self.player_1_pieces))
                                     or piece.combination_state.isdisjoint(other_piece.combination_state)
                                 ):
                                     piece.valid_move_positions[piece_type].append(new_pos)
