@@ -2,7 +2,7 @@ import random
 
 from flask import Flask
 import flask.json
-from flask_socketio import SocketIO, send, emit, join_room
+from flask_socketio import SocketIO, emit, join_room
 import json
 
 from chesslet.board import Board, InvalidPieceSelectionException
@@ -56,6 +56,7 @@ class ServerState:
         self.games = {}
         self.user_file_path = user_file_path
 
+        # Load in the persisted users.
         with open(user_file_path) as user_file:
             players = json.load(user_file)
             for player in players.values():
@@ -107,25 +108,25 @@ class ServerState:
 server_state = ServerState("./users.json")
 
 
-def default_func(obj):
-    if type(obj) is set:
-        obj = list(obj)
-    elif type(obj) is Point:
-        obj = {"x": obj.x, "y": obj.y}
-    return obj
+class customJSONEncoder:
+    @staticmethod
+    def default_func(obj):
+        if type(obj) is set:
+            obj = list(obj)
+        elif type(obj) is Point:
+            obj = {"x": obj.x, "y": obj.y}
+        return obj
 
-
-class newJson:
     @staticmethod
     def dumps(obj, **kwargs):
-        return flask.json.dumps(obj, **kwargs, default=default_func)
+        return flask.json.dumps(obj, **kwargs, default=customJSONEncoder.default_func)
 
     @staticmethod
     def loads(string, **kwargs):
         return flask.json.loads(string, **kwargs)
 
 
-socketio = SocketIO(app, json=newJson)
+socketio = SocketIO(app, json=customJSONEncoder)
 
 
 @socketio.on("login")
@@ -141,12 +142,8 @@ def login(data):
 @socketio.on("create_game")
 @response_decorator
 def create_game(data):
-    # TODO throw error if in game already.
-    # data = token (user uuid)
-    # res = game_uuid
     game_uuid = server_state.new_game(data["token"])
 
-    # TODO join a room here.
     join_room(game_uuid)
     return {
         "game_uuid": game_uuid
@@ -156,8 +153,6 @@ def create_game(data):
 @socketio.on("join_game")
 @response_decorator
 def join_game(data):
-    # data = token, game_uuid
-    # res = --
     game_uuid = data["game_uuid"]
 
     server_state.join_game(
@@ -168,23 +163,18 @@ def join_game(data):
     join_room(game_uuid)
 
     emit("game start", {"b": server_state.games[game_uuid].get_game_state()}, json=True, room=game_uuid)
-    # TODO
     return
 
 
 @socketio.on("leave_game")
 @response_decorator
 def leave_game(data):
-    # data = game_uuid
-    # res = --
     pass
 
 
 @socketio.on("move_piece")
 @response_decorator
 def move_piece(data):
-    # data = token, game_uuid, from_pos, to_pos, combination_state
-    # res = board_state
     server_state.games[data["game_uuid"]].move_piece(
         data["token"],
         Point(data["from_pos"]["x"], data["from_pos"]["y"]),

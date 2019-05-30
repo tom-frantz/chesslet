@@ -1,0 +1,20 @@
+{
+  "12314567890abcdef": {
+    "uuid": "12314567890abcdef",
+    "password": "unsafe",
+    "account_name": "Tom",
+    "highscore": 0
+  },
+  "12314567890abcde0": {
+    "uuid": "12314567890abcde0",
+    "password": "unsafe",
+    "account_name": "Flynn",
+    "highscore": 0
+  },
+  "p2314567890abcde0": {
+    "uuid": "p2314567890abcde0",
+    "password": "unsafe",
+    "account_name": " ",
+    "highscore": 0
+  }
+}
