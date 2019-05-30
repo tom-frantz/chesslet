@@ -1,13 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import API, {configureAPI} from "./utils/api.js";
+import {configureAPI} from "./utils/api.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {Board} from "./containers/Board.js";
 import Login from "./containers/Login";
 import ConnectToGame from "./containers/ConnectToGame";
-
-let data = require('./utils/dummy.json'); //dummy data, delete later
 
 class App extends React.Component {
     constructor(props) {

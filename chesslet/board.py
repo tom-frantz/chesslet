@@ -2,13 +2,16 @@ import itertools
 
 from chesslet.point import Point
 from chesslet.piece import Piece
+from typing import List
 
 
 class InvalidMoveException(Exception):
     pass
 
+
 class InvalidPieceSelectionException(Exception):
     pass
+
 
 class Board:
     board_size = 6
@@ -17,7 +20,7 @@ class Board:
     def __init__(self, session, empty=False):
         # Creates the board matrix and fills it with None
         self.session = session
-        self.board = []
+        self.board: List[List[Piece or None]] = []
         for i in range(self.board_size):
             self.board.append([None] * Board.board_size)
 
@@ -66,37 +69,19 @@ class Board:
 
     def move_piece(self, player_1_turn, curr_pos, new_pos, combination_state = None):
         # Curr_pos within board bounds
-        if curr_pos.x < 0 or curr_pos.x > self.board_size - 1 or new_pos.y < 0 or new_pos.y > self.board_size - 1:
-            raise InvalidMoveException
+        self.check_in_bounds(curr_pos, new_pos)
 
-        # Curr_pos contains a piece
-        piece = self.board[curr_pos.x][curr_pos.y]
-        if piece is None:
+        piece = self.get_piece(curr_pos)
+
+        combination_state = self.get_combination_state(combination_state, piece)
+
+        current_player_piece_list: List[Piece] = self.player_1_pieces if player_1_turn else self.player_2_pieces
+
+        if piece not in current_player_piece_list:
+            # The piece is not the current players
             raise InvalidPieceSelectionException
 
-        # The combination_state (if supplied) is contained within piece's combination_state
-        if combination_state is None:
-            combination_state = piece.combination_state.copy()
-        else:
-            if not piece.combination_state >= combination_state:
-                raise InvalidPieceSelectionException
-
-        player_piece_list = self.player_1_pieces if player_1_turn else self.player_2_pieces
-
-        # Piece is within the correct player list
-        if piece not in player_piece_list:
-            raise InvalidPieceSelectionException
-
-        # New_pos is a valid move
-        found = False
-        for piece_type in combination_state:
-            if new_pos in piece.valid_move_positions[piece_type]:
-                found = True
-                break
-        if not found:
-            raise InvalidMoveException
-
-        other_piece = self.board[new_pos.x][new_pos.y]
+        self.check_if_reachable(combination_state, new_pos, piece, current_player_piece_list)
 
         # If the supplied combination_state is not the same as
         # the piece's, it attempts to split the piece 
@@ -104,20 +89,21 @@ class Board:
         if piece.combination_state == combination_state:
             moved_piece = piece
             moved_piece.position = new_pos
+            # Should it move the piece here?
             self.board[curr_pos.x][curr_pos.y] = None
         else:
             moved_piece = piece.split_piece(combination_state, new_pos)
-            player_piece_list.append(moved_piece)
-                        
+            current_player_piece_list.append(moved_piece)
+
+        other_piece: Piece = self.board[new_pos.x][new_pos.y]
         if other_piece is None:
             self.board[new_pos.x][new_pos.y] = moved_piece
         else:
-            # Checks whether move will result in a combination
-            # or a piece taken
-            if other_piece in player_piece_list:
+            # Checks whether move will result in a combination or a piece taken
+            if other_piece in current_player_piece_list:
                 # Combines the piece into the other_piece
                 other_piece.combine_piece(moved_piece.combination_state)
-                player_piece_list.remove(moved_piece)
+                current_player_piece_list.remove(moved_piece)
             else:
                 self.board[new_pos.x][new_pos.y] = moved_piece
 
@@ -127,17 +113,66 @@ class Board:
         
         self.update_valid_move_positions()
 
+    def check_if_reachable(self, combination_state, new_pos, piece, current_player_pieces):
+        # Check if the combination state can move there
+        for piece_type in combination_state:
+            if new_pos in piece.valid_move_positions[piece_type]:
+                break
+        else:
+            raise InvalidMoveException
+
+        other_piece = self.board[new_pos.x][new_pos.y]
+        # If the other piece is an enemy, it's fine to move there.
+        if other_piece is None or other_piece not in current_player_pieces:
+            return
+
+        # If friendly, check that the two pieces combination states are disjoint
+        if not self.get_combination_state(None, other_piece).isdisjoint(combination_state):
+            raise InvalidMoveException
+
+    def check_in_bounds(self, curr_pos, new_pos):
+        if (
+            curr_pos.x < 0 or
+            curr_pos.x > self.board_size - 1 or
+            new_pos.y < 0 or
+            new_pos.y > self.board_size - 1
+        ):
+            raise InvalidMoveException
+
+    def get_piece(self, curr_pos: Point) -> Piece:
+        piece = self.board[curr_pos.x][curr_pos.y]
+
+        if piece is None:
+            raise InvalidPieceSelectionException
+
+        return piece
+
+    @staticmethod
+    def get_combination_state(combination_state, piece):
+        if combination_state is None:
+            combination_state = piece.combination_state.copy()
+        else:
+            combination_state = set(combination_state)
+            if not piece.combination_state >= combination_state:
+                raise InvalidPieceSelectionException
+
+        return combination_state
+
     def get_board_state(self):
         board_state = {"player_1": [], "player_2": []}
         for piece in self.player_1_pieces:
-            board_state["player_1"].append({"position": piece.position,
-            "combination_state": piece.combination_state,
-            "valid_move_positions": piece.valid_move_positions})
+            board_state["player_1"].append({
+                "position": piece.position,
+                "combination_state": piece.combination_state,
+                "valid_move_positions": piece.valid_move_positions
+            })
 
         for piece in self.player_2_pieces:
-            board_state["player_2"].append({"position": piece.position,
-            "combination_state": piece.combination_state,
-            "valid_move_positions": piece.valid_move_positions})
+            board_state["player_2"].append({
+                "position": piece.position,
+                "combination_state": piece.combination_state,
+                "valid_move_positions": piece.valid_move_positions
+            })
 
         return board_state
 

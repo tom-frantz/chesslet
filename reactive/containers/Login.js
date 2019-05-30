@@ -40,8 +40,6 @@ export default class Login extends React.Component {
                             </button>
                         </form>
                     </div>
-                    <div>{/* status */}</div>
-                    <ol>{/* TODO */}</ol>
                 </div>
             </div>
         )
