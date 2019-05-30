@@ -14,11 +14,15 @@ class Piece:
 
     def __init__(self, combination_state, position):
         # Checks to see if values within combination_state are valid
-        if not combination_state <= Piece.move_sets.keys(): raise InvalidCombinationStateException
+        if not combination_state <= Piece.move_sets.keys():
+            raise InvalidCombinationStateException
+
         # Ensures the combination_state is not empty
-        if len(combination_state) == 0: raise InvalidCombinationStateException
+        if len(combination_state) == 0:
+            raise InvalidCombinationStateException
+
         self.combination_state = combination_state
-        self.position = position # Point object
+        self.position = position  # Point object
         self.valid_move_positions = {"Rook": [], "Bishop": [], "Knight": []}
 
     def __str__(self):
@@ -36,9 +40,11 @@ class Piece:
         # Makes sure the combination state is valid
         if not combination_state < Piece.move_sets.keys():
             raise InvalidCombinationStateException
+
         # Makes sure the piece types in both combination states are different
         if not self.combination_state.isdisjoint(combination_state):
             raise InvalidCombinationStateException
+
         self.combination_state.update(combination_state)
 
     def split_piece(self, combination_state, new_pos):
