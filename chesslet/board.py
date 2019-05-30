@@ -68,7 +68,7 @@ class Board:
                                 piece.valid_move_positions[piece_type].append(new_pos)
                             else:
                                 # If the other_piece belongs to the other team or it is able to be combined with the piece
-                                if (piece in self.player_1_pieces != other_piece in self.player_1_pieces) \
+                                if (piece in self.player_1_pieces) != (other_piece in self.player_1_pieces) \
                                     or piece.combination_state.isdisjoint(other_piece.combination_state):
                                     piece.valid_move_positions[piece_type].append(new_pos)
                                 break
@@ -92,7 +92,7 @@ class Board:
         self.check_if_reachable(combination_state, new_pos, piece, current_player_piece_list)
 
         # If the supplied combination_state is not the same as
-        # the piece's, it attempts to split the piece 
+        # the piece's, it attempts to split the piece
         moved_piece = None
         if piece.combination_state == combination_state:
             moved_piece = piece

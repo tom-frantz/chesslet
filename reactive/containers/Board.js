@@ -245,6 +245,10 @@ export class Board extends React.Component {
         boardState.winner != null ?
             status = boardState.winner + " has Won!" :
             status = 'Next player: ' + (weAre === "White" && ourTurn || weAre === "Black" && !ourTurn ? 'White' : 'Black');
+        let playerNo;
+        weAre === "White" ?
+            playerNo = "White / Player 2" :
+            playerNo = "Black / Player 1";
 
         return (
             <div className="game">
@@ -252,11 +256,11 @@ export class Board extends React.Component {
                     <div>
                         <div className="status">
                             <div className="row status">
-                                <div className="col-4">
+                                <div className="col-6">
                                     <div className="font-italic">Game UUID: {this.props.gameUUID}</div>
                                 </div>
-                                <div className="col-4">
-                                    <div className="font-italic">You are: {this.props.weAre}</div>
+                                <div className="col-6">
+                                    <div className="font-italic">You are: {playerNo}</div>
                                 </div>
                             </div>
                             <div>{status}</div>
