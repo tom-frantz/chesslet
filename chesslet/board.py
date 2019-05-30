@@ -62,9 +62,16 @@ class Board:
                         new_pos = piece.position + offset
                         # If the new_pos is outside the board, the ray ends before appending
                         if 0 <= new_pos.x < self.board_size and 0 <= new_pos.y < self.board_size:
-                            piece.valid_move_positions[piece_type].append(new_pos)
-                            # If the new_pos contains a piece, the ray ends after appending
-                            if self.board[new_pos.x][new_pos.y] is not None: break
+                            other_piece = self.board[new_pos.x][new_pos.y]
+                            # If the space is empty
+                            if other_piece is None:
+                                piece.valid_move_positions[piece_type].append(new_pos)
+                            else:
+                                # If the other_piece belongs to the other team or it is able to be combined with the piece
+                                if (piece in self.player_1_pieces != other_piece in self.player_1_pieces) \
+                                    or piece.combination_state.isdisjoint(other_piece.combination_state):
+                                    piece.valid_move_positions[piece_type].append(new_pos)
+                                break
                         else: break
 
     def move_piece(self, player_1_turn, curr_pos, new_pos, combination_state = None):
