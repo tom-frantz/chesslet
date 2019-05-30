@@ -4,9 +4,6 @@ from chesslet.board import InvalidMoveException
 from chesslet.board import InvalidPieceSelectionException
 from chesslet.point import Point
 
-# -Session class has a function called by the server, which takes from pos,
-#  to pos, player id, and a name of a piece if it's being split off
-
 
 class PlayerAlreadyAddedException(Exception):
     pass
@@ -31,6 +28,10 @@ class Session:
         self.player_1_moves = 0
         self.player_2_moves = 0
 
+
+    # Adds a player to the game, provided that the player is not already logged
+    # in. Also checks that the player has not already been logged in as another
+    # player.
     def add_player(self, player):
         if not player.logged_in:
             raise PlayerNotLoggedIn("Cannot allow a not logged in player into game")
@@ -46,6 +47,8 @@ class Session:
 
         # TODO some sort of start game message here for the server.
 
+    # Removes a player from the game. If the player is not already added to the
+    # game, it raises a PlayerNotLoggedIn exception
     def remove_player(self, player):
         if player.uuid == self.player_1.uuid:
             self.player_1 = None
@@ -54,6 +57,12 @@ class Session:
         else:
             raise PlayerNotLoggedIn("Cannot remove a player not added to game")
 
+    # Recieves the current player, current piece position, new piece position
+    # and its combination state (if it is a combined piece) and sends the required
+    # info to the board object for validation. It then sends the outcome to the
+    # function.
+    # It also incrimens the moves for the player moving the piece and checks
+    # that the endgame condition has been reached.
     def move_piece(self, requesting_player_uuid, curr_pos, new_pos, combination_state = None):
         player = self.player_1 if self.player_1_turn else self.player_2
 
@@ -79,6 +88,7 @@ class Session:
         player = self.player_1 if self.player_1_turn else self.player_2
         player.score += 5
 
+    # Send the current game state information to the front end.
     def get_game_state(self):
         # returns a list of players, their updated piece states and their scores
         game_state = self.board.get_board_state()

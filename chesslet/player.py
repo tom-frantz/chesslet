@@ -33,6 +33,10 @@ class Player:
     def __repr__(self):
         return str(self.__dict__)
 
+    # Logs a user in
+    # Checks that the password inputed is the same as what is saved in the object.
+    # If it is the same, set logged in true and return.
+    # otherwise, raise invalid password exception.
     def login(self, password):
         self.logged_in = self.password == password
         if not self.logged_in:
@@ -40,6 +44,9 @@ class Player:
 
         return self.logged_in  # True
 
+    # Logs a user outside
+    # If a user is logged in, set self.logged_in to false, and return.
+    # Else, raise PlayerNotLoggedIn exception.
     def logout(self):
         if self.logged_in:
             self.logged_in = False
