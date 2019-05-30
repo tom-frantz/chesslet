@@ -95,7 +95,7 @@ export class Board extends React.Component {
             return;
         }
 
-        if(squares[i].props.color === 'white' && ourTurn && weAre === "White"){
+        if(squares[i].props.color === 'white' || ourTurn && weAre === "White"){
             if(i >= 100){
                 this.setState({
                     subPiece: squares[i],
@@ -108,7 +108,7 @@ export class Board extends React.Component {
                 });
             }
             return;
-        }else if(squares[i].props.color === 'black' && ourTurn && weAre === "Black"){
+        }else if(squares[i].props.color === 'black' || ourTurn && weAre === "Black"){
             if(i >= 100){
                 this.setState({
                     subPiece: squares[i],

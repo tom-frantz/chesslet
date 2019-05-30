@@ -13,15 +13,15 @@ class App extends React.Component {
         this.state = {
             username: "",
             password: "",
-            loggedIn: false,
-            inGame: false,
+            loggedIn: true,
+            inGame: true,
             myTurn: false,
             gameUUID: "",
             gameData: {
                 player_1: [],
                 player_2: []
             },
-            // gameData: data,
+            gameData: data,
             API: configureAPI(
                 "http://0.0.0.0:5000/",
                 (res, API) => {

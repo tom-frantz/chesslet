@@ -108,19 +108,19 @@ ol, ul {
 
 .sub0{
   z-index: 1000;
-  right: -60px;
-  top: -49px;
+  right: -45px;
+  top: -45px;
 }
 
 .sub1{
   z-index: 1000;
-  right: -60px;
-  bottom: -49px;
+  right: -45px;
+  bottom: -45px;
 }
 
 .sub2{
   z-index: 1000;
-  right: -85px;
+  right: -60px;
   top: 25px;
 }
 
