@@ -79,15 +79,15 @@ ol, ul {
   background: #fff;
   border: 1px solid #999;
   float: left;
-  font-size: 50px;
+  font-size: 3.5vw;
   font-weight: bold;
   line-height: 34px;
-  height: 100px;
+  height: 7vw;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 100px;
+  width: 7vw;
 }
 
 .square-container{
@@ -103,20 +103,20 @@ ol, ul {
 
 .sub0{
   z-index: 1000;
-  right: -60px;
-  top: -49px;
+  right: calc((-7vw / 10) - 50px);
+  top: calc((-7vw / 10) - 50px);
 }
 
 .sub1{
   z-index: 1000;
-  right: -60px;
-  bottom: -49px;
+  right: calc((-7vw / 10) - 50px);
+  bottom: calc((-7vw / 10) - 50px);
 }
 
 .sub2{
   z-index: 1000;
-  right: -85px;
-  top: 25px;
+  right: calc((-7vw * 0.75) - 25px);
+  top: calc(7vw / 4);
 }
 
 .square:focus {

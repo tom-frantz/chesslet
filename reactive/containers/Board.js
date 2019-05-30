@@ -250,15 +250,19 @@ export class Board extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <div>
-                        <div className="row">
-                            <div className="col-2">
-                                <div className="status">Game UUID: {this.props.gameUUID}</div>
+                        <div className="status">
+                            <div className="row status">
+                                <div className="col-4">
+                                    <div className="font-italic">Game UUID: {this.props.gameUUID}</div>
+                                </div>
+                                <div className="col-4">
+                                    <div className="font-italic">You are: {this.props.weAre}</div>
+                                </div>
                             </div>
-                            <div className="col-2">
-                                <div className="status">You are: {this.props.weAre}</div>
-                            </div>
+                            <div>{status}</div>
+                            <div className="font-weight-bold">Score for player 1: {boardState.player_1_score}</div>
+                            <div className="font-weight-bold">Score for player 2: {boardState.player_2_score}</div>
                         </div>
-                        <div className="status">{status}</div>
                         {this.renderGrid(SIZE, squares)}
                         <br/>
                     </div>
