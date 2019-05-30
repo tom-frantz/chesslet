@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {configureAPI} from "./utils/api.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/App.css';
 
 import {Board} from "./containers/Board.js";
 import Login from "./containers/Login";
