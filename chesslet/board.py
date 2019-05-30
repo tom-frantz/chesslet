@@ -72,9 +72,10 @@ class Board:
                                     or piece.combination_state.isdisjoint(other_piece.combination_state):
                                     piece.valid_move_positions[piece_type].append(new_pos)
                                 break
-                        else: break
+                        else:
+                            break
 
-    def move_piece(self, player_1_turn, curr_pos, new_pos, combination_state = None):
+    def move_piece(self, player_1_turn, curr_pos, new_pos, combination_state=None):
         # Curr_pos within board bounds
         self.check_in_bounds(curr_pos, new_pos)
 
@@ -117,7 +118,7 @@ class Board:
                 # Other_piece gets taken
                 (self.player_2_pieces if player_1_turn else self.player_1_pieces).remove(other_piece)
                 self.session.piece_taken(other_piece)
-        
+
         self.update_valid_move_positions()
 
     def check_if_reachable(self, combination_state, new_pos, piece, current_player_pieces):
