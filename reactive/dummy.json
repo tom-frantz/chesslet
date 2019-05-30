@@ -179,7 +179,8 @@
       },
       "combination_state": [
         "Rook",
-        "Bishop"
+        "Bishop",
+        "Knight"
       ],
       "valid_move_positions": {
         "Rook": [
