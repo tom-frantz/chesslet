@@ -1,3 +1,5 @@
+# tests/test_game.py
+
 import unittest
 
 from chesslet.player import Player

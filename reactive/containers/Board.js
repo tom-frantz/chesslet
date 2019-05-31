@@ -1,3 +1,5 @@
+// reactive/containers/Board.js
+
 import React from 'react';
 import {ChessPiece} from '../components/ChessPiece.js';
 
@@ -173,6 +175,7 @@ export class Board extends React.Component {
                                     value={newSubPiece}
                                     onClick={() => this.handleClick(newSubPiece.key, squares)}
                                     subPieces=''
+                                    key={100 + k}
                                 />;
                             }
                         }
@@ -242,9 +245,17 @@ export class Board extends React.Component {
         const squares = this.placePieces();
         const {weAre, ourTurn, boardState} = this.props;
         let status;
-        boardState.winner != null ?
-            status = boardState.winner + " has Won!" :
+        if (boardState.winner != null){
+            if (boardState.player_1_score > boardState.player_2_score){
+                status = "Player 1 has Won!";
+            } else if(boardState.player_1_score < boardState.player_2_score){
+                status = "Player 2 has won!";
+            } else{
+                status = "It's a tie!";
+            }
+        }else{
             status = 'Next player: ' + (weAre === "White" && ourTurn || weAre === "Black" && !ourTurn ? 'White' : 'Black');
+        }
         let playerNo;
         weAre === "White" ?
             playerNo = "White / Player 2" :

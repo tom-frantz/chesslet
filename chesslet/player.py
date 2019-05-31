@@ -1,3 +1,5 @@
+# chesslet/player.py
+
 class InvalidPasswordException(Exception):
     pass
 

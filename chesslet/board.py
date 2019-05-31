@@ -1,3 +1,5 @@
+# chesslet/board.py
+
 import itertools
 
 from chesslet.point import Point

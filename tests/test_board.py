@@ -1,3 +1,5 @@
+# tests/test_board.py
+
 import unittest
 from functools import partial
 
@@ -24,7 +26,7 @@ class BoardTest(unittest.TestCase):
         self.player_1 = Player("abc", "unsafe", "tom")
         self.player_2 = Player("yeet", "unsafe", "jashdjas")
         self.board = Board(Session("abc"), True)
-    
+
     def test_move_rook(self):
         piece = self.board.add_piece({"Rook"}, Point(0, 0), player_1=True)
         self.board.add_piece({"Knight"}, Point(1, 0), player_1=False)

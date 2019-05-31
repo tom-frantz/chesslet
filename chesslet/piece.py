@@ -1,3 +1,5 @@
+# chesslet/piece.py
+
 from chesslet.point import Point
 
 
@@ -49,10 +51,8 @@ class Piece:
 
     def split_piece(self, combination_state, new_pos):
         # Checks the splitting state is contained within the current
-        # state before altering 
+        # state before altering
         if not self.combination_state > combination_state:
             raise InvalidCombinationStateException
         self.combination_state -= combination_state
         return Piece(combination_state, new_pos)
-
-

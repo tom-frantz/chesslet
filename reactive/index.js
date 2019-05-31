@@ -1,3 +1,5 @@
+// reactive/index.js
+
 import React from "react";
 import ReactDOM from "react-dom";
 import {configureAPI} from "./utils/api.js";
@@ -17,7 +19,7 @@ class App extends React.Component {
             password: "",
             loggedIn: false,
             inGame: false,
-            myTurn: false,
+            ourTurn: false,
             gameUUID: "",
             gameData: {
                 player_1: [],

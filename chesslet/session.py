@@ -1,3 +1,5 @@
+# chesslet/session.py
+
 from chesslet.player import PlayerNotLoggedIn
 from chesslet.board import Board
 from chesslet.board import InvalidMoveException
