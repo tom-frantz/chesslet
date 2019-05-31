@@ -146,6 +146,10 @@ class Board:
         if (
             curr_pos.x < 0 or
             curr_pos.x > self.board_size - 1 or
+            curr_pos.y < 0 or
+            curr_pos.y > self.board_size - 1 or 
+            new_pos.x < 0 or
+            new_pos.x > self.board_size - 1 or
             new_pos.y < 0 or
             new_pos.y > self.board_size - 1
         ):
